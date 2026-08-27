@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { getPokemonDetails } from '../api/pokeApi';
 import { capitalize } from '../utils/textUtils';
+import { ErrorState, LoadingState } from './AsyncState';
 
 function PokemonCard({ pokemon, returnTo = '/pokedex' }) {
   const [pokemonDetails, setPokemonDetails] = useState(null);
@@ -37,15 +38,8 @@ function PokemonCard({ pokemon, returnTo = '/pokedex' }) {
   return (
     <div className="pokemon-card">
       {error ? (
-        <div className="pokemon-card-status" role="alert">
-          <p>Unable to load {capitalize(pokemon.name)}.</p>
-          <button
-            type="button"
-            onClick={() => setRetryCount((currentCount) => currentCount + 1)}
-          >
-            Try again
-          </button>
-        </div>
+        <ErrorState className="pokemon-card-status" message={`Unable to load ${capitalize(pokemon.name)}.`}
+          onRetry={() => setRetryCount((currentCount) => currentCount + 1)} />
       ) : pokemonDetails ? (
         <Link
           className="pokemon-card-link"
@@ -74,9 +68,7 @@ function PokemonCard({ pokemon, returnTo = '/pokedex' }) {
           */}
         </Link>
       ) : (
-        <p className="pokemon-card-status" role="status">
-          Loading...
-        </p>
+        <LoadingState className="pokemon-card-status" label={`Loading ${pokemon.name}`} />
       )}
     </div>
   );

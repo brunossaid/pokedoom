@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import FavoriteModal from '../components/FavoriteModal';
 import ConfirmModal from '../components/ConfirmModal';
+import Pagination from '../components/Pagination';
 import { capitalize } from '../utils/textUtils';
 import { useFavorites } from '../hooks/useFavorites';
 
@@ -17,6 +18,7 @@ function Favorites() {
   const [showFilters, setShowFilters] = useState(false);
   const [page, setPage] = useState(1);
   const [favoriteToRemove, setFavoriteToRemove] = useState(null);
+  const [storageError, setStorageError] = useState('');
 
   const sortedFavorites = [...favorites].sort(
     (first, second) => first.priority - second.priority || first.name.localeCompare(second.name)
@@ -43,16 +45,35 @@ function Favorites() {
   );
 
   function editFavorite(formValues) {
-    saveFavorite({
+    const saved = saveFavorite({
       ...editingFavorite,
       ...formValues,
       savedAt: new Date().toISOString(),
     });
+
+    if (!saved) {
+      setStorageError(
+        'Unable to update this favorite. Check your browser storage and try again.'
+      );
+      return;
+    }
+
+    setStorageError('');
     setEditingFavorite(null);
   }
 
   function confirmFavoriteRemoval() {
-    removeFavorite(favoriteToRemove.id);
+    const removed = removeFavorite(favoriteToRemove.id);
+
+    if (!removed) {
+      setStorageError(
+        'Unable to remove this favorite. Check your browser storage and try again.'
+      );
+      setFavoriteToRemove(null);
+      return;
+    }
+
+    setStorageError('');
     setFavoriteToRemove(null);
   }
 
@@ -80,6 +101,12 @@ function Favorites() {
         </div>
         <p>Ordered from highest to lowest priority.</p>
       </header>
+
+      {storageError && (
+        <div className="error-state" role="alert">
+          <p>{storageError}</p>
+        </div>
+      )}
 
       {sortedFavorites.length === 0 ? (
         <div className="favorites-empty">
@@ -213,41 +240,12 @@ function Favorites() {
           )}
 
           {visibleFavorites.length > 0 && (
-            <nav className="pagination" aria-label="Favorites pagination">
-              <button
-                type="button"
-                onClick={() => setPage(1)}
-                disabled={currentPage === 1}
-                aria-label="Go to first favorites page"
-              >
-                «
-              </button>
-              <button
-                type="button"
-                onClick={() => setPage(currentPage - 1)}
-                disabled={currentPage === 1}
-                aria-label="Go to previous favorites page"
-              >
-                ‹
-              </button>
-              <span>{currentPage} / {totalPages}</span>
-              <button
-                type="button"
-                onClick={() => setPage(currentPage + 1)}
-                disabled={currentPage >= totalPages}
-                aria-label="Go to next favorites page"
-              >
-                ›
-              </button>
-              <button
-                type="button"
-                onClick={() => setPage(totalPages)}
-                disabled={currentPage >= totalPages}
-                aria-label="Go to last favorites page"
-              >
-                »
-              </button>
-            </nav>
+            <Pagination
+              page={currentPage}
+              totalPages={totalPages}
+              onChange={setPage}
+              label="Favorites pagination"
+            />
           )}
         </>
       )}

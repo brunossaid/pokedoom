@@ -1,0 +1,5 @@
+.site-footer { display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 20px 20px 110px; color: var(--text-color); text-align: center; font-size: 0.85rem; border-top: 2px solid var(--border-color); }
+.site-footer strong { font-family: 'Press Start 2P', sans-serif; font-size: 0.75rem; }
+.site-footer a { padding: 1px 4px; color: inherit; font-weight: bold; transition: color 0.2s ease, background-color 0.2s ease; }
+.site-footer a:hover, .site-footer a:focus-visible { background-color: var(--hover-background); color: var(--hover-color); }
+.site-footer a:focus-visible { outline: 2px solid var(--border-color); outline-offset: 2px; }

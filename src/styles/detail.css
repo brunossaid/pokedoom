@@ -204,13 +204,13 @@
   background: #2774c8;
 }
 .pokemon-type.type-electric {
-  background: #f4c430;
+  background: #9a7300;
 }
 .pokemon-type.type-grass {
   background: #3d8b3d;
 }
 .pokemon-type.type-ice {
-  background: #68b8c7;
+  background: #287f91;
 }
 .pokemon-type.type-fighting {
   background: #9d2d24;
@@ -249,13 +249,6 @@
   background: #c45b88;
 }
 
-.detail-types .type-electric,
-.detail-types .type-ice {
-  color: #151515;
-  text-shadow: none;
-  border-color: rgba(0, 0, 0, 0.45);
-}
-
 .effectiveness-grid {
   display: grid;
   gap: 22px;
@@ -280,13 +273,6 @@
   font-weight: 700;
   text-align: center;
   text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.45);
-}
-
-.effectiveness-type.type-electric,
-.effectiveness-type.type-ice {
-  color: #151515;
-  border-color: rgba(0, 0, 0, 0.45);
-  text-shadow: none;
 }
 
 .detail-section {

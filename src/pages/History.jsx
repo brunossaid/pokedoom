@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { capitalize } from '../utils/textUtils';
 import ConfirmModal from '../components/ConfirmModal';
+import Pagination from '../components/Pagination';
 import { useHistory } from '../hooks/useHistory';
 
 const HISTORY_PER_PAGE = 10;
@@ -78,41 +79,12 @@ function History() {
       )}
 
       {history.length > 0 && (
-        <nav className="pagination" aria-label="Viewing history pagination">
-          <button
-            type="button"
-            onClick={() => setPage(1)}
-            disabled={currentPage === 1}
-            aria-label="Go to first history page"
-          >
-            «
-          </button>
-          <button
-            type="button"
-            onClick={() => setPage(currentPage - 1)}
-            disabled={currentPage === 1}
-            aria-label="Go to previous history page"
-          >
-            ‹
-          </button>
-          <span>{currentPage} / {totalPages}</span>
-          <button
-            type="button"
-            onClick={() => setPage(currentPage + 1)}
-            disabled={currentPage >= totalPages}
-            aria-label="Go to next history page"
-          >
-            ›
-          </button>
-          <button
-            type="button"
-            onClick={() => setPage(totalPages)}
-            disabled={currentPage >= totalPages}
-            aria-label="Go to last history page"
-          >
-            »
-          </button>
-        </nav>
+        <Pagination
+          page={currentPage}
+          totalPages={totalPages}
+          onChange={setPage}
+          label="Viewing history pagination"
+        />
       )}
 
       {showClearConfirmation && (
