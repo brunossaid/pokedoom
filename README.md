@@ -23,11 +23,9 @@ Proyecto desarrollado para el Trabajo Integrador del Módulo 1 de Aplicaciones M
 
 ## Tecnologías
 
-- React 19
-- React Router
-- Vite
-- JavaScript ES6+
-- CSS3
+- React
+- JavaScript
+- CSS
 - Fetch API
 - PokéAPI
 - OpenStreetMap
@@ -69,41 +67,6 @@ npm run lint     # Revisa el código con ESLint
 | `/contact` | Contacto y ubicación |
 
 Las rutas inexistentes muestran una página 404 propia.
-
-## Persistencia local
-
-La aplicación no necesita backend. Los favoritos, el historial y el tema se guardan exclusivamente en el navegador mediante `localStorage`.
-
-- Los datos permanecen después de recargar o cerrar la página.
-- No se sincronizan entre dispositivos o navegadores.
-- Borrar los datos del navegador elimina la información almacenada.
-- Las entradas recuperadas se validan antes de utilizarse.
-
-## Estructura principal
-
-```text
-src/
-├── api/          # Consultas a PokéAPI
-├── components/   # Componentes reutilizables
-├── constants/    # Claves y constantes compartidas
-├── hooks/        # Lógica reutilizable de React
-├── pages/        # Vistas asociadas a las rutas
-├── services/     # Persistencia y acceso a localStorage
-├── styles/       # Estilos separados por funcionalidad
-└── utils/        # Utilidades generales
-```
-
-## Diseño responsive
-
-- Móvil: 2 Pokémon por fila.
-- Tablet: 3 Pokémon por fila.
-- Desktop: 5 Pokémon por fila.
-
-Favorites, History, Contact, Detail y los formularios también reorganizan su contenido según el ancho disponible.
-
-## Estado del proyecto
-
-Las vistas de Pokédex, detalle, favoritos, historial y contacto están implementadas. La página Home se encuentra pendiente de su diseño final. La conversión a PWA corresponde a una etapa opcional del trabajo.
 
 ## Autores
 
