@@ -14,12 +14,21 @@ function formatEvolutionCondition(detail) {
   if (detail.min_happiness) conditions.push(`Happiness ${detail.min_happiness}`);
   if (detail.min_affection) conditions.push(`Affection ${detail.min_affection}`);
   if (detail.min_beauty) conditions.push(`Beauty ${detail.min_beauty}`);
+  if (detail.min_damage_taken) {
+    conditions.push(
+      `Take at least ${detail.min_damage_taken} recoil damage without fainting`
+    );
+  }
   if (detail.time_of_day) conditions.push(formatDisplayName(detail.time_of_day));
   if (detail.known_move) conditions.push(`Know ${formatDisplayName(detail.known_move.name)}`);
   if (detail.known_move_type) {
     conditions.push(`Know a ${formatDisplayName(detail.known_move_type.name)} move`);
   }
   if (detail.location) conditions.push(`At ${formatDisplayName(detail.location.name)}`);
+  if (detail.gender === 1) conditions.push('Female only');
+  if (detail.gender === 2) conditions.push('Male only');
+  if (detail.formGender) conditions.push(`${detail.formGender} only`);
+  if (detail.region) conditions.push(`In ${formatDisplayName(detail.region.name)}`);
   if (detail.needs_overworld_rain) conditions.push('While raining');
   if (detail.turn_upside_down) conditions.push('Turn device upside down');
   return conditions.length > 0
@@ -27,7 +36,7 @@ function formatEvolutionCondition(detail) {
     : formatDisplayName(detail.trigger?.name || 'Special');
 }
 
-function EvolutionNode({ node, currentSpecies, returnTo }) {
+function EvolutionNode({ node, currentPokemon, returnTo }) {
   const uniqueDetails = node.evolutionDetails.filter(
     (detail, index, details) =>
       details.findIndex(
@@ -51,21 +60,21 @@ function EvolutionNode({ node, currentSpecies, returnTo }) {
         </div>
       )}
       <Link
-        className={`evolution-pokemon ${node.name === currentSpecies ? 'current' : ''}`}
+        className={`evolution-pokemon ${node.name === currentPokemon ? 'current' : ''}`}
         to={`/pokemon/${node.name}`}
         state={{ returnTo }}
-        aria-current={node.name === currentSpecies ? 'page' : undefined}
+        aria-current={node.name === currentPokemon ? 'page' : undefined}
       >
         <img src={node.image} alt="" />
-        <strong>{capitalize(node.name)}</strong>
+        <strong>{formatDisplayName(node.displayName || node.name)}</strong>
       </Link>
       {node.evolvesTo.length > 0 && (
         <div className="evolution-branches">
           {node.evolvesTo.map((evolution) => (
             <EvolutionNode
-              key={evolution.name}
+              key={evolution.key || evolution.name}
               node={evolution}
-              currentSpecies={currentSpecies}
+              currentPokemon={currentPokemon}
               returnTo={returnTo}
             />
           ))}
@@ -157,23 +166,43 @@ export function PokemonDefenses({ defenses, loading, error, onRetry }) {
 }
 
 function formatSpecialRequirement(requirement) {
+  if (requirement.label) return requirement.label;
   if (requirement.trigger === 'gigantamax-factor') return 'Gigantamax Factor';
+  if (requirement.trigger === 'item' && requirement.name) return `Use ${formatDisplayName(requirement.name)}`;
   if (requirement.trigger === 'held-item' && requirement.name) return `Hold ${formatDisplayName(requirement.name)}`;
+  if (requirement.trigger === 'move' && requirement.name) {
+    return `Know ${formatDisplayName(requirement.name)}`;
+  }
   if (requirement.name) return formatDisplayName(requirement.name);
   return formatDisplayName(requirement.trigger || 'Special condition');
 }
 
-export function PokemonEvolutions({ chain, specialForms, currentSpecies, returnTo, loading, error, onRetry }) {
+export function PokemonEvolutions({ chain, specialForms, currentPokemon, returnTo, loading, error, onRetry }) {
+  const chainNodes = Array.isArray(chain) ? chain : chain ? [chain] : [];
+
   return (
     <section className="detail-section" aria-labelledby="evolution-title">
       <h3 id="evolution-title">Evolution chain</h3>
       {loading ? <p className="evolution-message" role="status">Loading evolution chain...</p> : error ? (
         <div className="evolution-message" role="alert"><p>{error}</p><button type="button" onClick={onRetry}>Try again</button></div>
-      ) : chain ? (
+      ) : (
         <>
-          <div className="evolution-tree" tabIndex="0" aria-label="Evolution chain">
-            <EvolutionNode node={chain} currentSpecies={currentSpecies} returnTo={returnTo} />
-          </div>
+          {chainNodes.length > 0 ? (
+            <div className="evolution-tree" tabIndex="0" aria-label="Evolution chain">
+              <div className="evolution-branches evolution-roots">
+                {chainNodes.map((node) => (
+                  <EvolutionNode
+                    key={node.key || node.name}
+                    node={node}
+                    currentPokemon={currentPokemon}
+                    returnTo={returnTo}
+                  />
+                ))}
+              </div>
+            </div>
+          ) : (
+            <p className="evolution-message">This Pokémon does not evolve.</p>
+          )}
           {specialForms.length > 0 && (
             <div className="special-forms">
               <h4>Special forms</h4>
@@ -193,7 +222,7 @@ export function PokemonEvolutions({ chain, specialForms, currentSpecies, returnT
             </div>
           )}
         </>
-      ) : null}
+      )}
     </section>
   );
 }

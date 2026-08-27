@@ -1,3 +1,13 @@
+import { FORM_REQUIREMENT_FALLBACKS } from '../constants/formRequirements';
+import {
+  getEvolutionPokemonNames,
+  getEvolutionSpeciesNames,
+  getFormContext,
+  getVariantTag,
+  MAJOR_TRANSFORMATION_PATTERN,
+  REGIONAL_FORM_NAMES,
+} from '../utils/evolutionUtils';
+
 const BASE_URL = 'https://pokeapi.co/api/v2';
 const REGION_GENERATION_FALLBACKS = {
   hisui: 8,
@@ -84,48 +94,263 @@ export async function getPokemonSpecies(name) {
   return response.json();
 }
 
-async function addEvolutionImages(chainLink) {
-  const [pokemon, evolutionDetails] = await Promise.all([
-    getPokemonDetails(chainLink.species.name),
-    Promise.all(
-      chainLink.evolution_details.map(async (detail) => {
-        const evolutionItem = detail.item || detail.held_item;
+export async function getPokemonForms(forms = []) {
+  if (forms.length <= 1) return [];
 
-        if (!evolutionItem?.url) {
-          return { ...detail, itemSprite: null };
-        }
+  return Promise.all(
+    forms.map(async ({ name, url }) => {
+      const response = await fetch(url);
+      if (!response.ok) throw new Error('Failed to fetch Pokémon form');
+      const form = await response.json();
 
-        const itemResponse = await fetch(evolutionItem.url);
-        const itemData = itemResponse.ok ? await itemResponse.json() : null;
+      return {
+        name,
+        label: form.form_name || name,
+        image: form.sprites.front_default,
+        shinyImage: form.sprites.front_shiny,
+      };
+    })
+  );
+}
 
-        return {
-          ...detail,
-          itemSprite: itemData?.sprites?.default || null,
-        };
-      })
-    ),
-  ]);
+async function getPokemonForEvolutionSpecies(speciesName, formContext) {
+  const species = await getPokemonSpecies(speciesName);
+  const exactCurrentVariety = species.varieties.find(
+    ({ pokemon }) => pokemon.name === formContext.pokemonName
+  );
+  const regionalVariety = formContext.region
+    ? species.varieties.find(({ pokemon }) =>
+        pokemon.name.includes(`-${formContext.region}`)
+      )
+    : null;
+  const defaultVariety = species.varieties.find(({ is_default: isDefault }) => isDefault);
+  const selectedVariety = exactCurrentVariety || regionalVariety || defaultVariety;
 
-  return {
-    name: chainLink.species.name,
-    image:
-      pokemon.sprites.other['official-artwork'].front_default ||
-      pokemon.sprites.front_default ||
-      '/images/image-fallback.png',
-    evolutionDetails,
-    evolvesTo: await Promise.all(chainLink.evolves_to.map(addEvolutionImages)),
+  if (!selectedVariety) {
+    throw new Error('No suitable Pokémon variety found for this species');
+  }
+
+  return getPokemonDetails(selectedVariety.pokemon.name);
+}
+
+async function addItemSprites(evolutionDetails) {
+  return Promise.all(
+    evolutionDetails.map(async (detail) => {
+      const evolutionItem = detail.item || detail.held_item;
+      if (!evolutionItem?.url) return { ...detail, itemSprite: null };
+
+      const itemResponse = await fetch(evolutionItem.url);
+      const itemData = itemResponse.ok ? await itemResponse.json() : null;
+      return { ...detail, itemSprite: itemData?.sprites?.default || null };
+    })
+  );
+}
+
+async function addEvolutionNodes(chainLink, formContext) {
+  const species = await getPokemonSpecies(chainLink.species.name);
+  const defaultVariety = species.varieties.find(({ is_default: isDefault }) => isDefault);
+  const hasRegionalVariety = species.varieties.some(({ pokemon }) =>
+    REGIONAL_FORM_NAMES.some((region) => pokemon.name.includes(`-${region}`))
+  );
+  const regionalVariety = formContext.region
+    ? species.varieties.find(({ pokemon }) =>
+        pokemon.name.includes(`-${formContext.region}`)
+      )
+    : null;
+
+  if (!defaultVariety) throw new Error('No default variety found for evolution');
+
+  const variantGroups = new Map();
+  const addVariant = (key, pokemonName, details, options = {}) => {
+    variantGroups.set(key, {
+      pokemonName,
+      details,
+      formName: options.formName || null,
+      formUrl: options.formUrl || null,
+      formTag: options.formTag ?? getVariantTag(options.formName || pokemonName, chainLink.species.name),
+    });
   };
+
+  if (chainLink.evolution_details.length === 0) {
+    const childEvolutionDetails = chainLink.evolves_to.flatMap(
+      ({ evolution_details: evolutionDetails }) => evolutionDetails
+    );
+    const requiredBaseForms = new Set(
+      childEvolutionDetails.map(({ base_form: baseForm }) => baseForm?.name).filter(Boolean)
+    );
+    if (childEvolutionDetails.some(({ base_form: baseForm }) => !baseForm)) {
+      requiredBaseForms.add(defaultVariety.pokemon.name);
+    }
+    const visibleBaseForms = formContext.lockRegionalChain && formContext.region
+      ? [...requiredBaseForms].filter((baseForm) =>
+          baseForm.includes(`-${formContext.region}`)
+        )
+      : hasRegionalVariety && !formContext.region
+        ? [...requiredBaseForms].filter(
+            (baseForm) => baseForm === defaultVariety.pokemon.name
+          )
+        : [...requiredBaseForms];
+
+    if (visibleBaseForms.length > 0) {
+      visibleBaseForms.forEach((baseFormName) => {
+        addVariant(baseFormName, baseFormName, [], {
+          formTag:
+            hasRegionalVariety && baseFormName === defaultVariety.pokemon.name
+              ? '__default__'
+              : getVariantTag(baseFormName, chainLink.species.name),
+        });
+      });
+    } else {
+      const pokemon = await getPokemonForEvolutionSpecies(chainLink.species.name, formContext);
+      if (pokemon.forms.length > 1) {
+        pokemon.forms.forEach((form) => {
+          addVariant(form.name, pokemon.name, [], {
+            formName: form.name,
+            formUrl: form.url,
+          });
+        });
+      } else {
+        addVariant(pokemon.name, pokemon.name, []);
+      }
+    }
+  } else if (formContext.lockRegionalChain && regionalVariety) {
+    // A chain opened from a regional Pokémon must remain in that regional
+    // branch. A normal base Pokémon may still show regional alternatives.
+    const matchingRegionalDetails = chainLink.evolution_details.filter(
+      (detail) =>
+        detail.evolved_form?.name === regionalVariety.pokemon.name ||
+        detail.region?.name === formContext.region
+    );
+    addVariant(
+      regionalVariety.pokemon.name,
+      regionalVariety.pokemon.name,
+      matchingRegionalDetails.length > 0
+        ? matchingRegionalDetails
+        : chainLink.evolution_details
+    );
+  } else {
+    chainLink.evolution_details.forEach((detail) => {
+      const pokemonName = detail.evolved_form?.name || defaultVariety.pokemon.name;
+      const currentDetails = variantGroups.get(pokemonName)?.details || [];
+      addVariant(pokemonName, pokemonName, [...currentDetails, detail]);
+    });
+
+    const genderVarieties = species.varieties.filter(({ pokemon }) =>
+      /-(?:male|female)$/.test(pokemon.name)
+    );
+    const hasExplicitEvolvedForms = chainLink.evolution_details.some(
+      ({ evolved_form: evolvedForm }) => evolvedForm
+    );
+
+    if (genderVarieties.length > 1 && !hasExplicitEvolvedForms) {
+      variantGroups.clear();
+      genderVarieties.forEach(({ pokemon }) => {
+        const formGender = pokemon.name.endsWith('-female') ? 'Female' : 'Male';
+        addVariant(
+          pokemon.name,
+          pokemon.name,
+          chainLink.evolution_details.map((detail) => ({ ...detail, formGender }))
+        );
+      });
+    } else if (!hasExplicitEvolvedForms) {
+      const evolutionVarieties = species.varieties.filter(
+        ({ pokemon }) =>
+          !MAJOR_TRANSFORMATION_PATTERN.test(pokemon.name) &&
+          !REGIONAL_FORM_NAMES.some((region) => pokemon.name.includes(`-${region}`)) &&
+          !pokemon.name.includes('-totem')
+      );
+
+      if (evolutionVarieties.length > 1) {
+        variantGroups.clear();
+        evolutionVarieties.forEach(({ pokemon }) => {
+          addVariant(pokemon.name, pokemon.name, chainLink.evolution_details);
+        });
+      }
+    }
+  }
+
+  if (
+    chainLink.evolution_details.length > 0 &&
+    formContext.region &&
+    !formContext.lockRegionalChain &&
+    regionalVariety
+  ) {
+    const fallbackDetails = chainLink.evolution_details;
+    const regionalDetails = fallbackDetails.map((detail) => ({
+      ...detail,
+      region: detail.region || { name: formContext.region },
+    }));
+
+    if (!variantGroups.has(defaultVariety.pokemon.name)) {
+      addVariant(
+        defaultVariety.pokemon.name,
+        defaultVariety.pokemon.name,
+        fallbackDetails
+      );
+    }
+    if (!variantGroups.has(regionalVariety.pokemon.name)) {
+      addVariant(
+        regionalVariety.pokemon.name,
+        regionalVariety.pokemon.name,
+        regionalDetails
+      );
+    }
+  }
+
+  const descendantGroups = await Promise.all(
+    chainLink.evolves_to.map((evolution) => addEvolutionNodes(evolution, formContext))
+  );
+  const evolvesTo = descendantGroups.flat();
+
+  return Promise.all(
+    [...variantGroups.entries()].map(async ([key, variant]) => {
+      const [pokemon, evolutionDetails, formResponse] = await Promise.all([
+        getPokemonDetails(variant.pokemonName),
+        addItemSprites(variant.details),
+        variant.formUrl ? fetch(variant.formUrl) : Promise.resolve(null),
+      ]);
+      const formData = formResponse?.ok ? await formResponse.json() : null;
+      const matchingEvolutions = variant.formTag
+        ? evolvesTo.filter(
+            (evolution) =>
+              evolution.baseForms.includes(variant.pokemonName) ||
+              !evolution.formTag ||
+              evolution.formTag === variant.formTag
+          )
+        : evolvesTo;
+
+      return {
+        key,
+        name: pokemon.name,
+        displayName: variant.formName || pokemon.name,
+        formTag: variant.formTag,
+        baseForms: [...new Set(
+          variant.details.map(({ base_form: baseForm }) => baseForm?.name).filter(Boolean)
+        )],
+        speciesName: chainLink.species.name,
+        image:
+          formData?.sprites?.front_default ||
+          pokemon.sprites.other['official-artwork'].front_default ||
+          pokemon.sprites.front_default ||
+          '/images/image-fallback.png',
+        evolutionDetails,
+        evolvesTo: matchingEvolutions,
+      };
+    })
+  );
 }
 
-function getEvolutionSpeciesNames(chainLink) {
-  return [
-    chainLink.species.name,
-    ...chainLink.evolves_to.flatMap(getEvolutionSpeciesNames),
-  ];
-}
-
-export async function getPokemonEvolutionFamily(speciesName) {
+export async function getPokemonEvolutionFamily(speciesName, pokemonName = speciesName) {
   const speciesData = await getPokemonSpecies(speciesName);
+  const formContext = getFormContext(pokemonName);
+
+  if (!speciesData.evolution_chain?.url) {
+    return {
+      chain: null,
+      specialForms: await getPokemonSpecialForms(speciesName),
+    };
+  }
+
   const evolutionResponse = await fetch(speciesData.evolution_chain.url);
 
   if (!evolutionResponse.ok) {
@@ -133,22 +358,51 @@ export async function getPokemonEvolutionFamily(speciesName) {
   }
 
   const evolutionData = await evolutionResponse.json();
+  const rootSpeciesName = evolutionData.chain.species.name;
+  const rootSpeciesData = rootSpeciesName === speciesName
+    ? speciesData
+    : await getPokemonSpecies(rootSpeciesName);
+  const chainFormContext = {
+    ...formContext,
+    lockRegionalChain: Boolean(
+      formContext.region && rootSpeciesData.varieties.some(({ pokemon }) =>
+        pokemon.name.includes(`-${formContext.region}`)
+      )
+    ),
+  };
   const familySpecies = getEvolutionSpeciesNames(evolutionData.chain);
-  const [chain, familyForms] = await Promise.all([
-    addEvolutionImages(evolutionData.chain),
+  const [chainNodes, familyForms] = await Promise.all([
+    addEvolutionNodes(evolutionData.chain, chainFormContext),
     Promise.all(familySpecies.map(getPokemonSpecialForms)),
   ]);
 
   return {
-    chain,
-    specialForms: familyForms.flat(),
+    chain: chainNodes,
+    specialForms: familyForms
+      .flat()
+      .filter((form) => !getEvolutionPokemonNames(chainNodes).includes(form.name)),
   };
 }
 
 export async function getPokemonSpecialForms(speciesName) {
   const speciesData = await getPokemonSpecies(speciesName);
-  const specialVarieties = speciesData.varieties.filter(({ pokemon }) =>
-    /(?:-mega(?:-|$)|-primal$|-gmax$)/.test(pokemon.name)
+  const isRegionalOrTotem = (name) =>
+    REGIONAL_FORM_NAMES.some((region) => name.includes(`-${region}`)) ||
+    name.includes('-totem');
+  const isBaseGenderForm = (name) => /-(?:male|female)$/.test(name);
+  const alternateVarieties = speciesData.varieties.filter(
+    ({ is_default: isDefault, pokemon }) =>
+      !isDefault &&
+      !isRegionalOrTotem(pokemon.name) &&
+      !isBaseGenderForm(pokemon.name)
+  );
+  const hasRegularAlternateForms = alternateVarieties.some(
+    ({ pokemon }) => !MAJOR_TRANSFORMATION_PATTERN.test(pokemon.name)
+  );
+  const specialVarieties = speciesData.varieties.filter(
+    ({ is_default: isDefault, pokemon }) =>
+      alternateVarieties.some((variety) => variety.pokemon.name === pokemon.name) ||
+      (isDefault && hasRegularAlternateForms)
   );
 
   return Promise.all(
@@ -160,13 +414,19 @@ export async function getPokemonSpecialForms(speciesName) {
       const formData = formResponse.ok
         ? await formResponse.json()
         : { trigger_conditions: [] };
+      const triggerConditions = formData.trigger_conditions?.length > 0
+        ? formData.trigger_conditions
+        : FORM_REQUIREMENT_FALLBACKS[details.name] || [];
       const requirements = await Promise.all(
-        (formData.trigger_conditions || []).map(async (condition) => {
-          if (!condition.url) {
-            return { ...condition, sprite: null };
-          }
+        triggerConditions.map(async (condition) => {
+          const resourceUrl = condition.url || (
+            condition.trigger === 'item' && condition.name
+              ? `${BASE_URL}/item/${encodeURIComponent(condition.name)}`
+              : null
+          );
+          if (!resourceUrl) return { ...condition, sprite: null };
 
-          const resourceResponse = await fetch(condition.url);
+          const resourceResponse = await fetch(resourceUrl);
           const resourceData = resourceResponse.ok ? await resourceResponse.json() : null;
 
           return {
@@ -175,6 +435,11 @@ export async function getPokemonSpecialForms(speciesName) {
           };
         })
       );
+
+      const formLabel = formData.form_name
+        ?.split('-')
+        .map((word) => `${word.charAt(0).toUpperCase()}${word.slice(1)}`)
+        .join(' ');
 
       return {
         name: details.name,
@@ -188,7 +453,15 @@ export async function getPokemonSpecialForms(speciesName) {
           ? 'Primal Reversion'
           : details.name.endsWith('-gmax')
             ? 'Gigantamax'
-            : 'Mega Evolution',
+            : details.name.includes('-mega')
+              ? details.name.includes('-female-mega')
+                ? 'Female Mega Evolution'
+                : details.name.includes('-male-mega')
+                  ? 'Male Mega Evolution'
+                  : 'Mega Evolution'
+              : formLabel
+                ? `${formLabel} Form`
+                : 'Base Form',
       };
     })
   );

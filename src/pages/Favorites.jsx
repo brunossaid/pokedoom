@@ -190,7 +190,7 @@ function Favorites() {
 
                 <div className="favorite-card-actions">
                   <Link
-                    to={`/pokemon/${favorite.name}`}
+                    to={`/pokemon/${favorite.pokemonName || favorite.name}`}
                     state={{ returnTo: '/favorites' }}
                   >
                     View details
