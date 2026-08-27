@@ -3,7 +3,8 @@ import { Link } from 'react-router-dom';
 
 function Header() {
   const location = useLocation();
-  const isPokedex = location.pathname === '/pokedex';
+  const hideBorder =
+    location.pathname === '/' || location.pathname === '/pokedex';
 
   const titles = {
     '/': 'PokeDoom',
@@ -18,7 +19,7 @@ function Header() {
     : titles[location.pathname] || 'PokeDoom';
 
   return (
-    <header className={`hero ${isPokedex ? 'no-border' : ''}`}>
+    <header className={`hero ${hideBorder ? 'no-border' : ''}`}>
       <Link to="/" className="hero-link">
         <h1>{title}</h1>
       </Link>
