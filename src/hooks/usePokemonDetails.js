@@ -3,6 +3,7 @@ import {
   getPokemonDefenses,
   getPokemonDetails,
   getPokemonEvolutionFamily,
+  getPokemonForms,
   getPokemonSpecies,
 } from '../api/pokeApi';
 import { recordPokemonView } from '../services/historyStorage';
@@ -11,6 +12,7 @@ export function usePokemonDetails(name) {
   const [pokemon, setPokemon] = useState(null);
   const [species, setSpecies] = useState(null);
   const [selectedAppearance, setSelectedAppearance] = useState('default');
+  const [forms, setForms] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [retryCount, setRetryCount] = useState(0);
@@ -33,12 +35,18 @@ export function usePokemonDetails(name) {
 
       try {
         const data = await getPokemonDetails(name);
-        const speciesData = await getPokemonSpecies(data.species.name);
+        const [speciesData, formData] = await Promise.all([
+          getPokemonSpecies(data.species.name),
+          getPokemonForms(data.forms),
+        ]);
 
         if (!cancelled) {
           setPokemon(data);
           setSpecies(speciesData);
-          setSelectedAppearance('default');
+          setForms(formData);
+          setSelectedAppearance(
+            formData.length > 1 ? `form:${formData[0].name}` : 'default'
+          );
           recordPokemonView(data);
         }
       } catch {
@@ -62,7 +70,10 @@ export function usePokemonDetails(name) {
       setEvolutionLoading(true);
       setEvolutionError('');
       try {
-        const data = await getPokemonEvolutionFamily(pokemon.species.name);
+        const data = await getPokemonEvolutionFamily(
+          pokemon.species.name,
+          pokemon.name
+        );
         if (!cancelled) {
           setEvolutionChain(data.chain);
           setSpecialForms(data.specialForms);
@@ -76,7 +87,7 @@ export function usePokemonDetails(name) {
 
     loadEvolutionChain();
     return () => { cancelled = true; };
-  }, [pokemon?.species.name, evolutionRetryCount]);
+  }, [pokemon?.name, pokemon?.species.name, evolutionRetryCount]);
 
   const typeNames = pokemon?.types.map(({ type }) => type.name).join(',') || '';
 
@@ -106,6 +117,7 @@ export function usePokemonDetails(name) {
     species,
     selectedAppearance,
     setSelectedAppearance,
+    forms,
     loading,
     error,
     retryPokemon: () => setRetryCount((count) => count + 1),

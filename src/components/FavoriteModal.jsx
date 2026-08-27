@@ -29,6 +29,8 @@ function FavoriteModal({ pokemon, appearance, image, existingFavorite, onClose, 
   }
 
   const appearanceLabel = appearance
+    .replace(/^form:/, '')
+    .replace(/:shiny$/, '-shiny')
     .split('-')
     .map(capitalize)
     .join(' ');

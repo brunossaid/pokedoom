@@ -11,6 +11,10 @@ import {
   PokemonStats,
 } from '../components/pokemon-detail/DetailSections';
 
+function formatPokemonName(value) {
+  return value.split('-').map(capitalize).join(' ');
+}
+
 function PokemonDetail() {
   const { name } = useParams();
   const location = useLocation();
@@ -23,6 +27,7 @@ function PokemonDetail() {
     species,
     selectedAppearance,
     setSelectedAppearance,
+    forms,
     loading,
     error,
     retryPokemon,
@@ -75,14 +80,26 @@ function PokemonDetail() {
     pokemon.sprites.front_shiny;
   const shinyFemaleImage =
     pokemon.sprites.other.home.front_shiny_female || pokemon.sprites.front_shiny_female;
-  const appearanceImages = {
+  const standardAppearanceImages = {
     default: defaultImage,
     female: femaleImage,
     shiny: shinyImage,
     'shiny-female': shinyFemaleImage,
   };
+  const formAppearanceImages = Object.fromEntries(
+    forms.flatMap((form) => [
+      [`form:${form.name}`, form.image],
+      [`form:${form.name}:shiny`, form.shinyImage],
+    ]).filter(([, formImage]) => formImage)
+  );
+  const appearanceImages = { ...standardAppearanceImages, ...formAppearanceImages };
   const image = appearanceImages[selectedAppearance] || defaultImage;
-  const isShiny = selectedAppearance.startsWith('shiny');
+  const isShiny = selectedAppearance === 'shiny' || selectedAppearance.endsWith(':shiny');
+  const selectedFormName = selectedAppearance.startsWith('form:')
+    ? selectedAppearance.slice('form:'.length).replace(/:shiny$/, '')
+    : null;
+  const selectedForm = forms.find((form) => form.name === selectedFormName);
+  const favoriteName = selectedForm?.name || pokemon.name;
   const favoriteId = `${pokemon.name}:${selectedAppearance}`;
   const existingFavorite = favorites.find((favorite) => favorite.id === favoriteId);
 
@@ -91,7 +108,8 @@ function PokemonDetail() {
     const favorite = {
       id: favoriteId,
       pokemonId: pokemon.id,
-      name: pokemon.name,
+      name: favoriteName,
+      pokemonName: pokemon.name,
       appearance: selectedAppearance,
       image,
       isShiny,
@@ -101,7 +119,7 @@ function PokemonDetail() {
     persistFavorite(favorite);
     setShowFavoriteForm(false);
     setFavoriteConfirmation(
-      `${capitalize(pokemon.name)} was ${wasAlreadySaved ? 'updated in' : 'added to'} your favorites.`
+      `${formatPokemonName(favoriteName)} was ${wasAlreadySaved ? 'updated in' : 'added to'} your favorites.`
     );
   }
   const englishDescriptions = species.flavor_text_entries.filter(
@@ -130,6 +148,19 @@ function PokemonDetail() {
             <img src={image} alt={`${pokemon.name}${isShiny ? ' shiny' : ''}`} />
           </div>
           <div className="gender-form-toggle" aria-label="Choose Pokémon appearance">
+            {forms.length > 1 ? forms.map((form) => (
+              <button
+                type="button"
+                className={selectedForm?.name === form.name ? 'active' : ''}
+                onClick={() => setSelectedAppearance(
+                  `form:${form.name}${isShiny && form.shinyImage ? ':shiny' : ''}`
+                )}
+                aria-pressed={selectedForm?.name === form.name}
+                key={form.name}
+              >
+                {formatPokemonName(form.label)}
+              </button>
+            )) : (
             <button
               type="button"
               className={selectedAppearance === 'default' ? 'active' : ''}
@@ -138,7 +169,8 @@ function PokemonDetail() {
             >
               Default
             </button>
-            {femaleImage && (
+            )}
+            {forms.length <= 1 && femaleImage && (
               <button
                 type="button"
                 className={selectedAppearance === 'female' ? 'active' : ''}
@@ -148,7 +180,7 @@ function PokemonDetail() {
                 Female
               </button>
             )}
-            {shinyImage && (
+            {forms.length <= 1 && shinyImage && (
               <button
                 type="button"
                 className={selectedAppearance === 'shiny' ? 'active shiny-option' : 'shiny-option'}
@@ -158,7 +190,7 @@ function PokemonDetail() {
                 ✦ Shiny
               </button>
             )}
-            {shinyFemaleImage && (
+            {forms.length <= 1 && shinyFemaleImage && (
               <button
                 type="button"
                 className={
@@ -170,6 +202,18 @@ function PokemonDetail() {
                 aria-pressed={selectedAppearance === 'shiny-female'}
               >
                 ✦ Shiny female
+              </button>
+            )}
+            {forms.length > 1 && selectedForm?.shinyImage && (
+              <button
+                type="button"
+                className={isShiny ? 'active shiny-option' : 'shiny-option'}
+                onClick={() => setSelectedAppearance(
+                  isShiny ? `form:${selectedForm.name}` : `form:${selectedForm.name}:shiny`
+                )}
+                aria-pressed={isShiny}
+              >
+                ✦ Shiny
               </button>
             )}
           </div>
@@ -232,7 +276,7 @@ function PokemonDetail() {
       <PokemonEvolutions
         chain={evolutionChain}
         specialForms={specialForms}
-        currentSpecies={pokemon.species.name}
+        currentPokemon={pokemon.name}
         returnTo={returnTo}
         loading={evolutionLoading}
         error={evolutionError}
