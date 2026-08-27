@@ -1,13 +1,8 @@
-import { useState } from 'react';
-import { clearStoredHistory, getHistory } from '../services/historyStorage';
+import { useContext } from 'react';
+import { HistoryContext } from '../context/HistoryContext';
 
 export function useHistory() {
-  const [history, setHistory] = useState(getHistory);
-
-  function clearHistory() {
-    clearStoredHistory();
-    setHistory([]);
-  }
-
-  return { history, clearHistory };
+  const context = useContext(HistoryContext);
+  if (!context) throw new Error('useHistory must be used within HistoryProvider');
+  return context;
 }

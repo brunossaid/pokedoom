@@ -1,25 +1,8 @@
-import { useState } from 'react';
-import {
-  getFavorites,
-  removeFavoriteById,
-  saveFavorites,
-  upsertFavorite,
-} from '../services/favoritesStorage';
+import { useContext } from 'react';
+import { FavoritesContext } from '../context/FavoritesContext';
 
 export function useFavorites() {
-  const [favorites, setFavorites] = useState(getFavorites);
-
-  function saveFavorite(favorite) {
-    const nextFavorites = upsertFavorite(favorites, favorite);
-    saveFavorites(nextFavorites);
-    setFavorites(nextFavorites);
-  }
-
-  function removeFavorite(favoriteId) {
-    const nextFavorites = removeFavoriteById(favorites, favoriteId);
-    saveFavorites(nextFavorites);
-    setFavorites(nextFavorites);
-  }
-
-  return { favorites, saveFavorite, removeFavorite };
+  const context = useContext(FavoritesContext);
+  if (!context) throw new Error('useFavorites must be used within FavoritesProvider');
+  return context;
 }

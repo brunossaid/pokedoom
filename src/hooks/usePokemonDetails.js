@@ -6,9 +6,10 @@ import {
   getPokemonForms,
   getPokemonSpecies,
 } from '../api/pokeApi';
-import { recordPokemonView } from '../services/historyStorage';
+import { useHistory } from './useHistory';
 
 export function usePokemonDetails(name) {
+  const { recordView } = useHistory();
   const [pokemon, setPokemon] = useState(null);
   const [species, setSpecies] = useState(null);
   const [selectedAppearance, setSelectedAppearance] = useState('default');
@@ -47,7 +48,7 @@ export function usePokemonDetails(name) {
           setSelectedAppearance(
             formData.length > 1 ? `form:${formData[0].name}` : 'default'
           );
-          recordPokemonView(data);
+          recordView(data);
         }
       } catch {
         if (!cancelled) {
@@ -60,7 +61,7 @@ export function usePokemonDetails(name) {
 
     loadPokemon();
     return () => { cancelled = true; };
-  }, [name, retryCount]);
+  }, [name, retryCount, recordView]);
 
   useEffect(() => {
     if (!pokemon?.species.name) return undefined;

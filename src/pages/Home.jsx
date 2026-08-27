@@ -1,39 +1,42 @@
-import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { getPokemonDetails, getPokemonSpecies } from '../api/pokeApi';
 import PokemonCard from '../components/PokemonCard';
-import { getHistory } from '../services/historyStorage';
-import { getFavorites } from '../services/favoritesStorage';
+import { ErrorState, LoadingState } from '../components/AsyncState';
 import { capitalize } from '../utils/textUtils';
+import { useRandomPokemon } from '../hooks/useRandomPokemon';
+import { useHistory } from '../hooks/useHistory';
 
 function Home() {
-  const [randomPokemon, setRandomPokemon] = useState(null);
-  const [randomSpecies, setRandomSpecies] = useState(null);
-  const [history, setHistory] = useState([]);
-  const [favorites, setFavorites] = useState([]);
-
-  useEffect(() => {
-    async function loadRandomPokemon() {
-      const randomId = Math.floor(Math.random() * 1025) + 1;
-
-      const pokemonData = await getPokemonDetails(randomId);
-      const speciesData = await getPokemonSpecies(pokemonData.name);
-
-      setRandomPokemon(pokemonData);
-      setRandomSpecies(speciesData);
-    }
-
-    loadRandomPokemon();
-
-    setHistory(getHistory());
-    setFavorites(getFavorites());
-  }, []);
+  const { history } = useHistory();
+  const {
+    pokemon: randomPokemon,
+    species: randomSpecies,
+    loading: featuredLoading,
+    error: featuredError,
+    retry: retryFeatured,
+  } = useRandomPokemon();
 
   return (
     <div className="home-container">
+      <section className="home-welcome" aria-labelledby="home-welcome-title">
+        <small>WELCOME, TRAINER</small>
+        <h2 id="home-welcome-title">Explore. Discover. Build your team.</h2>
+        <p>
+          Search every Pokémon, learn about their types and evolutions, save
+          your favorites and keep track of your discoveries.
+        </p>
+        <div className="home-welcome-actions">
+          <Link to="/pokedex">Explore Pokédex</Link>
+          <Link to="/favorites">View Favorites</Link>
+        </div>
+      </section>
+
       <section className="home-featured">
         <h2>Discover a Pokémon</h2>
-        {randomPokemon && randomSpecies && (
+        {featuredLoading ? (
+          <LoadingState label="Discovering a Pokémon" />
+        ) : featuredError ? (
+          <ErrorState message={featuredError} onRetry={retryFeatured} />
+        ) : randomPokemon && randomSpecies ? (
           <div className="daily-pokemon-card">
             <img
               className="daily-pokemon-image"
@@ -67,24 +70,25 @@ function Home() {
                   ?.flavor_text.replace(/\f|\n/g, ' ')}
               </p>
 
-              <Link to={`/pokemon/${randomPokemon.name}`}>View details</Link>
+              <Link
+                to={`/pokemon/${randomPokemon.name}`}
+                state={{ returnTo: '/' }}
+              >
+                View details
+              </Link>
             </div>
           </div>
-        )}
+        ) : null}
       </section>
 
-      <Link to="/pokedex" className="home-pokedex-link">
-        Explore Pokédex
-      </Link>
-
-      <section>
+      <section className="home-collection">
         <h2>Recently viewed</h2>
 
         {history.length > 0 ? (
           <>
             <div className="home-history-grid">
               {history.slice(0, 3).map((pokemon) => (
-                <PokemonCard key={pokemon.id} pokemon={pokemon} />
+                <PokemonCard key={pokemon.id} pokemon={pokemon} returnTo="/" />
               ))}
             </div>
 
@@ -96,6 +100,7 @@ function Home() {
           <p>No Pokémon viewed yet.</p>
         )}
       </section>
+
     </div>
   );
 }

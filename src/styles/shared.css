@@ -1,0 +1,10 @@
+.pagination { display: flex; justify-content: center; align-items: center; gap: 40px; margin-top: 20px; }
+.pagination button { background: none; border: none; color: var(--text-color); font-family: inherit; font-size: 1.8rem; cursor: pointer; transition: 0.2s ease; }
+.pagination button:hover { transform: translateY(-2px); }
+.pagination button:disabled { opacity: 0.25; cursor: default; transform: none; }
+.pagination span { color: #888; font-size: 1rem; }
+.error-state, .pokemon-card-status { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; text-align: center; }
+.error-state { min-height: 65vh; padding: 24px; }
+.error-state p, .pokemon-card-status p { margin: 0; }
+.error-state button, .pokemon-card-status button { padding: 10px 16px; border: 2px solid var(--border-color); color: var(--text-color); background: var(--app-background); font: inherit; font-weight: 700; cursor: pointer; }
+.error-state button:hover, .pokemon-card-status button:hover { color: var(--hover-color); background: var(--hover-background); }

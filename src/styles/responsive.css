@@ -1,0 +1,23 @@
+@media (min-width: 768px) {
+  .menu-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  .bottom-menu {
+    height: 200px;
+  }
+
+  .pokemon-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 18px;
+  }
+
+  .pokemon-card {
+    min-height: 220px;
+  }
+
+  .pokemon-image {
+    width: 140px;
+    height: 140px;
+  }
+}
