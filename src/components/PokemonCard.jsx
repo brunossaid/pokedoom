@@ -20,7 +20,10 @@ function PokemonCard({ pokemon }) {
         <>
           <img
             className="pokemon-image"
-            src={pokemonDetails.sprites.front_default}
+            src={
+              pokemonDetails.sprites.front_default ||
+              '/images/image-fallback.png'
+            }
             alt={pokemonDetails.name}
           />
 
