@@ -1,0 +1,223 @@
+.favorite-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  display: grid;
+  place-items: center;
+  padding: 18px;
+  background: rgba(0, 0, 0, 0.72);
+}
+
+.confirm-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 2100;
+  display: grid;
+  place-items: center;
+  padding: 18px;
+  background: rgba(0, 0, 0, 0.72);
+}
+
+.confirm-modal {
+  width: min(100%, 440px);
+  padding: 28px;
+  color: var(--text-color);
+  background: var(--surface-background);
+  border: 3px solid var(--border-color);
+  box-shadow: 8px 8px 0 rgba(0, 0, 0, 0.45);
+  text-align: center;
+}
+
+.confirm-modal-icon {
+  display: grid;
+  place-items: center;
+  width: 52px;
+  height: 52px;
+  margin: 0 auto 16px;
+  color: #fff;
+  background: #d8324f;
+  border: 3px solid #8d1930;
+  font-size: 1.7rem;
+  font-weight: 800;
+}
+
+.confirm-modal h2,
+.confirm-modal p {
+  margin: 0;
+}
+
+.confirm-modal p {
+  margin-top: 12px;
+  color: #888;
+  line-height: 1.5;
+}
+
+.confirm-modal-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-top: 24px;
+}
+
+.confirm-modal-actions button {
+  padding: 11px 12px;
+  color: var(--text-color);
+  background: var(--app-background);
+  border: 2px solid var(--border-color);
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.confirm-modal-actions .confirm-danger {
+  color: #fff;
+  background: #d8324f;
+  border-color: #8d1930;
+}
+
+.confirm-modal-actions button:hover,
+.confirm-modal-actions button:focus-visible {
+  transform: translateY(-2px);
+  outline: 3px solid #ffd469;
+  outline-offset: 2px;
+}
+
+.favorite-modal {
+  position: relative;
+  width: min(100%, 540px);
+  max-height: calc(100vh - 36px);
+  overflow-y: auto;
+  padding: 20px;
+  color: var(--text-color);
+  background: var(--surface-background);
+  border: 3px solid var(--border-color);
+  box-shadow: 8px 8px 0 rgba(0, 0, 0, 0.45);
+}
+
+.favorite-modal-close {
+  position: absolute;
+  top: 10px;
+  right: 12px;
+  width: 38px;
+  height: 38px;
+  color: var(--text-color);
+  background: var(--app-background);
+  border: 2px solid var(--border-color);
+  font: inherit;
+  font-size: 1.4rem;
+  cursor: pointer;
+}
+
+.favorite-modal-heading {
+  display: flex;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 14px;
+  padding-right: 34px;
+  margin-bottom: 22px;
+}
+
+.favorite-modal-heading img {
+  width: 72px;
+  height: 72px;
+  object-fit: contain;
+  image-rendering: pixelated;
+}
+
+.favorite-modal-heading h2,
+.favorite-modal-heading small {
+  margin: 0;
+}
+
+.favorite-modal-heading small {
+  color: #888;
+}
+
+.favorite-shiny-tag {
+  margin-left: 0;
+  padding: 6px 8px;
+  color: #352600;
+  background: #ffd95a;
+  border: 2px solid #9c7610;
+  font-size: 0.75rem;
+  font-weight: 800;
+}
+
+.favorite-form {
+  display: grid;
+  gap: 9px;
+}
+
+.favorite-form label {
+  margin-top: 8px;
+  font-weight: 700;
+}
+
+.favorite-form input,
+.favorite-form textarea {
+  width: 100%;
+  padding: 11px;
+  color: var(--text-color);
+  background: var(--app-background);
+  border: 2px solid var(--border-color);
+  border-radius: 0;
+  font: inherit;
+  box-sizing: border-box;
+}
+
+.favorite-form textarea {
+  resize: vertical;
+}
+
+.favorite-form input:focus-visible,
+.favorite-form textarea:focus-visible,
+.favorite-modal button:focus-visible {
+  outline: 3px solid #ffd469;
+  outline-offset: 2px;
+}
+
+.favorite-note-label {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+}
+
+.favorite-note-label small {
+  color: #888;
+}
+
+.field-error {
+  margin: 0;
+  color: #e33b54;
+  font-size: 0.85rem;
+}
+
+.field-help {
+  color: #888;
+  font-size: 0.82rem;
+  line-height: 1.4;
+}
+
+.favorite-form-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.favorite-form-actions button {
+  padding: 10px 14px;
+  color: var(--text-color);
+  background: var(--app-background);
+  border: 2px solid var(--border-color);
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.favorite-form-actions button[type='submit'] {
+  color: #fff;
+  background: #d8324f;
+  border-color: #8d1930;
+}

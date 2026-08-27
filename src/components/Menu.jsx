@@ -6,7 +6,7 @@ function Menu() {
 
   return (
     <>
-      <nav className={`bottom-menu ${isOpen ? 'open' : ''}`}>
+      <nav id="main-navigation" className={`bottom-menu ${isOpen ? 'open' : ''}`}>
         <div className="menu-grid">
           <NavLink to="/pokedex" onClick={() => setIsOpen(false)}>
             Pokedex
@@ -26,10 +26,18 @@ function Menu() {
         </div>
       </nav>
 
-      <button className="pokeball-button" onClick={() => setIsOpen(!isOpen)}>
+      <button
+        type="button"
+        className="pokeball-button"
+        onClick={() => setIsOpen(!isOpen)}
+        aria-label={isOpen ? 'Close navigation menu' : 'Open navigation menu'}
+        aria-expanded={isOpen}
+        aria-controls="main-navigation"
+      >
         <img
           className={isOpen ? 'pokeball-open' : 'pokeball-closed'}
           src={isOpen ? '/images/blackball-open.png' : '/images/blackball.png'}
+          alt=""
         />
       </button>
     </>
