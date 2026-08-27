@@ -8,6 +8,7 @@ import './styles/history.css';
 import './styles/contact.css';
 import './styles/features.css';
 import './styles/detail.css';
+import './styles/home.css';
 import App from './App.jsx';
 
 createRoot(document.getElementById('root')).render(

@@ -1,12 +1,16 @@
 import { useState } from 'react';
 import { NavLink } from 'react-router-dom';
+import ThemeToggle from './ThemeToggle';
 
 function Menu() {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
     <>
-      <nav id="main-navigation" className={`bottom-menu ${isOpen ? 'open' : ''}`}>
+      <nav
+        id="main-navigation"
+        className={`bottom-menu ${isOpen ? 'open' : ''}`}
+      >
         <div className="menu-grid">
           <NavLink to="/pokedex" onClick={() => setIsOpen(false)}>
             Pokedex
@@ -24,6 +28,7 @@ function Menu() {
             Contact
           </NavLink>
         </div>
+        <ThemeToggle />
       </nav>
 
       <button

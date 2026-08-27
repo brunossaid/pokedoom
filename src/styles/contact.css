@@ -71,8 +71,7 @@
 .contact-form input:focus-visible,
 .contact-form textarea:focus-visible,
 .contact-submit:focus-visible {
-  outline: 3px solid #ffd469;
-  outline-offset: 2px;
+  box-shadow: 4px 4px 0 #52494a;
 }
 
 .contact-message-label {
@@ -91,7 +90,7 @@
   color: #fff;
   background: #d8324f;
   border: 2px solid #8d1930;
-  box-shadow: 4px 4px 0 #77767c;
+  box-shadow: 4px 4px 0 #611121;
   font: inherit;
   font-weight: 800;
   cursor: pointer;

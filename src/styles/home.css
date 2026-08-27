@@ -1,0 +1,158 @@
+.home-container {
+  padding-bottom: 120px;
+}
+
+.home-featured h2 {
+  margin: 10px 0 10px;
+}
+
+.daily-pokemon-card {
+  display: flex;
+  align-items: center;
+
+  border: 2px solid var(--border-color);
+  box-shadow: 4px 4px 0 #77767c;
+}
+
+.daily-pokemon-image {
+  width: 140px;
+  height: 140px;
+  object-fit: contain;
+  margin: 0 30px;
+}
+
+.daily-pokemon-info {
+  flex: 1;
+
+  padding: 10px 20px;
+
+  color: var(--text-color);
+  background-color: var(--surface-background);
+
+  border-left: 2px dashed var(--border-color);
+
+  text-align: left;
+}
+
+.daily-pokemon-card h2 {
+  margin: 10px 0 10px;
+
+  font-size: 1.3rem;
+  font-family: 'Press Start 2P';
+}
+
+.daily-pokemon-info .detail-types {
+  justify-content: flex-start;
+}
+
+.daily-pokemon-info a {
+  display: inline-block;
+
+  color: var(--text-color);
+  background-color: transparent;
+
+  text-decoration: none;
+  font-weight: bold;
+
+  border: 2px solid var(--border-color);
+  box-shadow: 4px 4px 0 #77767c;
+
+  padding: 2px 6px;
+  margin-bottom: 10px;
+
+  transition:
+    transform 0.2s ease,
+    background-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.daily-pokemon-info a:hover {
+  background-color: var(--hover-background);
+  color: var(--hover-color);
+  transform: translateY(-2px);
+}
+
+.home-pokedex-link {
+  display: inline-block;
+
+  width: 100%;
+  margin-top: 20px;
+  padding: 10px;
+
+  background-color: #d8324f;
+  color: white;
+
+  text-decoration: none;
+  font-weight: bold;
+  font-size: 1.2rem;
+  text-align: center;
+
+  border: 2px solid #8d1930;
+  box-shadow: 4px 4px 0 #611121;
+
+  transition: transform 0.2s ease;
+}
+
+.home-pokedex-link:hover {
+  transform: translateY(-2px);
+}
+
+.home-history-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+
+  width: 100%;
+  gap: 8px;
+}
+
+.home-section-link {
+  display: inline-block;
+
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
+
+  color: var(--text-color);
+  background-color: transparent;
+
+  font-weight: bold;
+  font-size: 1.2rem;
+  text-align: center;
+  text-decoration: none;
+
+  border: 2px solid var(--border-color);
+  box-shadow: 4px 4px 0 #77767c;
+
+  transition:
+    transform 0.2s ease,
+    background-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.home-section-link:hover {
+  background-color: var(--hover-background);
+  color: var(--hover-color);
+  transform: translateY(-2px);
+}
+
+@media (max-width: 480px) {
+  .daily-pokemon-card {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .daily-pokemon-image {
+    align-self: center;
+  }
+
+  .daily-pokemon-info {
+    border-left: none;
+    border-top: 2px dashed var(--border-color);
+
+    text-align: center;
+  }
+
+  .daily-pokemon-info .detail-types {
+    justify-content: center;
+  }
+}

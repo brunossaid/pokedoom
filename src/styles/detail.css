@@ -25,7 +25,7 @@
   padding: 28px;
   border: 2px solid var(--border-color);
   background: var(--surface-background);
-  box-shadow: 8px 8px 0 rgba(119, 118, 124, 0.55);
+  box-shadow: 5px 5px 0 rgba(119, 118, 124, 0.35);
   text-align: center;
 }
 
@@ -73,18 +73,19 @@
   border: 2px solid var(--border-color);
   color: var(--text-color);
   background: var(--app-background);
+  box-shadow: 4px 4px 0 #77767c;
   font: inherit;
   cursor: pointer;
+}
+
+.gender-form-toggle button:hover {
+  transform: translateY(-2px);
 }
 
 .gender-form-toggle button.active,
 .gender-form-toggle button:hover {
   color: var(--hover-color);
   background: var(--hover-background);
-}
-
-.gender-form-toggle .shiny-option {
-  border-color: #d6a91e;
 }
 
 .detail-heading h2 {
@@ -127,7 +128,10 @@
   font-size: 1.1rem;
   font-weight: 700;
   cursor: pointer;
-  transition: transform 0.2s ease, background-color 0.2s ease, color 0.2s ease;
+  transition:
+    transform 0.2s ease,
+    background-color 0.2s ease,
+    color 0.2s ease;
 }
 
 .add-favorite-button span {
@@ -190,24 +194,60 @@
   text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.45);
 }
 
-.pokemon-type.type-normal { background: #777a84; }
-.pokemon-type.type-fire { background: #d83a2e; }
-.pokemon-type.type-water { background: #2774c8; }
-.pokemon-type.type-electric { background: #f4c430; }
-.pokemon-type.type-grass { background: #3d8b3d; }
-.pokemon-type.type-ice { background: #68b8c7; }
-.pokemon-type.type-fighting { background: #9d2d24; }
-.pokemon-type.type-poison { background: #873b8f; }
-.pokemon-type.type-ground { background: #a66b2b; }
-.pokemon-type.type-flying { background: #675ca8; }
-.pokemon-type.type-psychic { background: #d63384; }
-.pokemon-type.type-bug { background: #6f8513; }
-.pokemon-type.type-rock { background: #806d2b; }
-.pokemon-type.type-ghost { background: #514278; }
-.pokemon-type.type-dragon { background: #4934b8; }
-.pokemon-type.type-dark { background: #3f3532; }
-.pokemon-type.type-steel { background: #606879; }
-.pokemon-type.type-fairy { background: #c45b88; }
+.pokemon-type.type-normal {
+  background: #777a84;
+}
+.pokemon-type.type-fire {
+  background: #d83a2e;
+}
+.pokemon-type.type-water {
+  background: #2774c8;
+}
+.pokemon-type.type-electric {
+  background: #f4c430;
+}
+.pokemon-type.type-grass {
+  background: #3d8b3d;
+}
+.pokemon-type.type-ice {
+  background: #68b8c7;
+}
+.pokemon-type.type-fighting {
+  background: #9d2d24;
+}
+.pokemon-type.type-poison {
+  background: #873b8f;
+}
+.pokemon-type.type-ground {
+  background: #a66b2b;
+}
+.pokemon-type.type-flying {
+  background: #675ca8;
+}
+.pokemon-type.type-psychic {
+  background: #d63384;
+}
+.pokemon-type.type-bug {
+  background: #6f8513;
+}
+.pokemon-type.type-rock {
+  background: #806d2b;
+}
+.pokemon-type.type-ghost {
+  background: #514278;
+}
+.pokemon-type.type-dragon {
+  background: #4934b8;
+}
+.pokemon-type.type-dark {
+  background: #3f3532;
+}
+.pokemon-type.type-steel {
+  background: #606879;
+}
+.pokemon-type.type-fairy {
+  background: #c45b88;
+}
 
 .detail-types .type-electric,
 .detail-types .type-ice {
@@ -291,9 +331,15 @@
   font-weight: 700;
 }
 
-.gender-male { color: #4aa3ff; }
-.gender-female { color: #f06fa9; }
-.gender-neutral { color: #999; }
+.gender-male {
+  color: #4aa3ff;
+}
+.gender-female {
+  color: #f06fa9;
+}
+.gender-neutral {
+  color: #999;
+}
 
 .stats-list {
   display: grid;

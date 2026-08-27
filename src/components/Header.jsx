@@ -4,6 +4,7 @@ import ThemeToggle from './ThemeToggle';
 
 function Header() {
   const location = useLocation();
+  const isPokedex = location.pathname === '/pokedex';
 
   const titles = {
     '/': 'PokeDoom',
@@ -18,11 +19,11 @@ function Header() {
     : titles[location.pathname] || 'PokeDoom';
 
   return (
-    <header className="hero">
+    <header className={`hero ${isPokedex ? 'no-border' : ''}`}>
       <Link to="/" className="hero-link">
         <h1>{title}</h1>
       </Link>
-      <ThemeToggle />
+      {/** <ThemeToggle /> */}
     </header>
   );
 }

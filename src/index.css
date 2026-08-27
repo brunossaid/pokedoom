@@ -40,7 +40,7 @@ body::after {
   position: fixed;
   bottom: 0;
   width: 100%;
-  height: 350px;
+  height: 300px;
   background: linear-gradient(transparent, var(--bottom-fade));
   pointer-events: none;
 }
@@ -52,7 +52,9 @@ body::after {
   margin: 0 auto;
 
   background-color: var(--app-background);
-  transition: background-color 0.25s ease, color 0.25s ease;
+  transition:
+    background-color 0.25s ease,
+    color 0.25s ease;
 }
 
 @media (min-width: 1201px) {
@@ -73,6 +75,10 @@ body::after {
   border-bottom: 2px solid var(--border-color);
 }
 
+.hero.no-border {
+  border-bottom: none;
+}
+
 .hero h1 {
   margin: 0;
   font-family: 'Press Start 2P';
@@ -85,50 +91,63 @@ body::after {
 }
 
 .theme-toggle {
-  width: 58px;
-  height: 32px;
-  padding: 3px;
+  width: 68px;
+  height: 38px;
+  padding: 4px;
+
   position: absolute;
   right: 12px;
-  border: 1px solid #b6c0ca;
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.92);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
+
+  border: 2px solid white;
+  border-radius: 0;
+
+  background-color: rgb(1, 1, 8);
+  box-shadow: 4px 4px 0 #77767c;
+
   cursor: pointer;
-  transition: transform 180ms ease, background-color 180ms ease, border-color 180ms ease;
+
+  transition:
+    transform 0.2s ease,
+    background-color 0.2s ease;
 }
 
 .theme-toggle:hover {
-  transform: translateY(-1px);
+  transform: translateY(-2px);
 }
 
 .theme-toggle:focus-visible {
-  outline: 3px solid #ffd469;
-  outline-offset: 3px;
+  outline: none;
+  box-shadow: 4px 4px 0 #c5c5c5;
 }
 
 .theme-toggle-icon {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 24px;
-  height: 24px;
-  color: #8d5f12;
-  background: #ffd469;
-  border-radius: 50%;
+
+  width: 26px;
+  height: 26px;
+
+  color: black;
+  background-color: white;
+
   transform: translateX(0);
-  transition: transform 0.25s ease, background-color 0.25s ease, color 0.25s ease;
+
+  transition:
+    transform 0.25s steps(4),
+    background-color 0.2s ease,
+    color 0.2s ease;
 }
 
 .theme-toggle.is-dark {
-  background: rgba(20, 20, 20, 0.96);
-  border-color: #4b4b55;
+  background-color: rgb(19, 19, 36);
 }
 
 .theme-toggle.is-dark .theme-toggle-icon {
-  color: #e5e7eb;
-  background: #3a3a46;
-  transform: translateX(26px);
+  color: white;
+  background-color: rgb(45, 45, 66);
+
+  transform: translateX(30px);
 }
 
 main {
@@ -193,6 +212,10 @@ main {
   z-index: 1001;
 }
 
+.pokeball-button:hover {
+  transform: translateX(-50%) translateY(-2px);
+}
+
 .pokeball-button img {
   object-fit: contain;
   display: block;
@@ -229,6 +252,12 @@ main {
   transition: transform 0.3s ease;
 
   z-index: 1000;
+}
+
+.bottom-menu .theme-toggle {
+  position: absolute;
+  right: 20px;
+  bottom: 40px;
 }
 
 .bottom-menu.open {
@@ -301,6 +330,12 @@ main {
   box-shadow: 4px 4px 0 #969696;
 }
 
+.search-bar:hover,
+.search-bar:focus-visible {
+  transform: translateY(-2px);
+  outline-offset: 2px;
+}
+
 .search-bar:focus {
   outline: none;
   border-color: #888;
@@ -322,6 +357,12 @@ main {
   cursor: pointer;
 }
 
+.filter-button:hover,
+.filter-button:focus-visible {
+  transform: translateY(-2px);
+  outline-offset: 2px;
+}
+
 .filters-menu {
   display: flex;
   gap: 12px;
@@ -339,10 +380,22 @@ main {
     padding 0.3s ease;
 }
 
+.filters-menu select:hover,
+.filters-menu select:focus-visible {
+  transform: translateY(-2px);
+  outline-offset: 2px;
+}
+
+.filters-menu select:focus {
+  outline: none;
+  border-color: #888;
+  box-shadow: 4px 4px 0 #c5c5c5;
+}
+
 .filters-menu.open {
   max-height: 100px;
   opacity: 1;
-  padding: 16px 10px 5px;
+  padding: 16px 4px 4px;
 }
 
 .filters-menu select {
@@ -354,7 +407,7 @@ main {
   color: black;
   background-color: white;
 
-  border: none;
+  border: 2px solid var(--text-color);
   border-radius: 0;
 
   font-family: inherit;
@@ -416,7 +469,7 @@ main {
   color: white;
   background: #d8324f;
   border: 2px solid #8d1930;
-  box-shadow: 4px 4px 0 #969696;
+  box-shadow: 4px 4px 0 #470f1b;
   font: inherit;
   font-size: 1.05rem;
   font-weight: 800;
@@ -441,7 +494,6 @@ main {
 .search-submit-button:hover,
 .search-submit-button:focus-visible {
   transform: translateY(-2px);
-  outline: 3px solid #ffd469;
   outline-offset: 2px;
 }
 
@@ -456,7 +508,7 @@ main {
   flex-direction: column;
   align-items: flex-start;
   gap: 14px;
-  margin: 22px 0 34px;
+  margin: 10px 0 10px;
   color: var(--text-color);
 }
 
@@ -491,7 +543,7 @@ main {
   color: #d8324f;
   background: var(--app-background);
   border: 2px solid #d8324f;
-  box-shadow: 3px 3px 0 #77767c;
+  box-shadow: 3px 3px 0 #721928;
   font: inherit;
   font-size: 0.82rem;
   font-weight: 800;
@@ -500,9 +552,7 @@ main {
 
 .applied-filters button:hover,
 .applied-filters button:focus-visible {
-  color: #fff;
-  background: #d8324f;
-  outline: 3px solid #ffd469;
+  transform: translateY(-2px);
   outline-offset: 2px;
 }
 
@@ -585,7 +635,6 @@ main {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 12px;
-  padding: 16px 0;
 }
 
 .pokemon-card {
@@ -595,7 +644,6 @@ main {
   justify-content: center;
   min-height: 180px;
   padding: 20px 8px;
-
 }
 
 .pokemon-card-link {
@@ -613,7 +661,7 @@ main {
 
 .pokemon-card:has(.pokemon-card-link):hover,
 .pokemon-card:has(.pokemon-card-link):focus-within {
-  background-color: var(--hover-background);
+  background-color: var(--surface-background);
   color: var(--hover-color);
   transform: translateY(-3px);
 }
@@ -637,6 +685,7 @@ main {
 .pokemon-name {
   margin: 0;
   text-align: center;
+  color: var(--text-color);
 }
 
 @media (min-width: 768px) {

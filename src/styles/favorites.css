@@ -178,6 +178,7 @@
   font-weight: 700;
   text-decoration: none;
   cursor: pointer;
+  box-shadow: 4px 4px 0 #414142;
 }
 
 .favorite-card-actions a:hover,
@@ -185,10 +186,18 @@
 .favorites-empty a:hover {
   color: var(--hover-color);
   background: var(--hover-background);
+  transform: translateY(-2px);
 }
 
 .favorite-card-actions .remove-favorite {
   color: #d8324f;
+}
+
+.favorite-card-actions .remove-favorite:hover {
+  background: #d8324f;
+  border-color: #8d1930;
+  color: white;
+  box-shadow: 4px 4px 0 #611121;
 }
 
 .favorites-empty {

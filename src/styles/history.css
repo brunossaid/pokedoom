@@ -35,12 +35,14 @@
   font-weight: 700;
   white-space: nowrap;
   cursor: pointer;
+  box-shadow: 4px 4px 0 #77767c;
 }
 
 .history-heading button:hover {
   color: #fff;
   background: #d8324f;
   border-color: #8d1930;
+  box-shadow: 4px 4px 0 #611121;
 }
 
 .history-list {
@@ -62,7 +64,9 @@
   border: 3px solid var(--border-color);
   box-shadow: 4px 4px 0 rgba(80, 80, 80, 0.35);
   text-decoration: none;
-  transition: transform 0.2s ease, background-color 0.2s ease;
+  transition:
+    transform 0.2s ease,
+    background-color 0.2s ease;
 }
 
 .history-card:hover,
