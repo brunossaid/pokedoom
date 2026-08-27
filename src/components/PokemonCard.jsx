@@ -1,23 +1,57 @@
 import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { getPokemonDetails } from '../api/pokeApi';
 import { capitalize } from '../utils/textUtils';
 
-function PokemonCard({ pokemon }) {
+function PokemonCard({ pokemon, returnTo = '/pokedex' }) {
   const [pokemonDetails, setPokemonDetails] = useState(null);
+  const [error, setError] = useState(false);
+  const [retryCount, setRetryCount] = useState(0);
 
   useEffect(() => {
+    let cancelled = false;
+
     async function loadPokemonDetails() {
-      const data = await getPokemonDetails(pokemon.name);
-      setPokemonDetails(data);
+      setError(false);
+
+      try {
+        const data = await getPokemonDetails(pokemon.name);
+
+        if (!cancelled) {
+          setPokemonDetails(data);
+        }
+      } catch {
+        if (!cancelled) {
+          setError(true);
+        }
+      }
     }
 
     loadPokemonDetails();
-  }, [pokemon.name]);
+
+    return () => {
+      cancelled = true;
+    };
+  }, [pokemon.name, retryCount]);
 
   return (
     <div className="pokemon-card">
-      {pokemonDetails && (
-        <>
+      {error ? (
+        <div className="pokemon-card-status" role="alert">
+          <p>Unable to load {capitalize(pokemon.name)}.</p>
+          <button
+            type="button"
+            onClick={() => setRetryCount((currentCount) => currentCount + 1)}
+          >
+            Try again
+          </button>
+        </div>
+      ) : pokemonDetails ? (
+        <Link
+          className="pokemon-card-link"
+          to={`/pokemon/${pokemonDetails.name}`}
+          state={{ returnTo }}
+        >
           <img
             className="pokemon-image"
             src={
@@ -38,7 +72,11 @@ function PokemonCard({ pokemon }) {
             ))}
           </div>
           */}
-        </>
+        </Link>
+      ) : (
+        <p className="pokemon-card-status" role="status">
+          Loading...
+        </p>
       )}
     </div>
   );

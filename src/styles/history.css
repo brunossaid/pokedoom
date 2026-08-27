@@ -1,0 +1,125 @@
+.history-page {
+  width: min(900px, 100%);
+  margin: 0 auto;
+  padding: 28px 8px 110px;
+}
+
+.history-heading {
+  margin-bottom: 24px;
+}
+
+.history-heading > div {
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.history-heading h2,
+.history-heading p {
+  margin: 0;
+}
+
+.history-heading p {
+  margin-top: 7px;
+  color: #888;
+}
+
+.history-heading button {
+  padding: 9px 12px;
+  color: #d8324f;
+  background: var(--app-background);
+  border: 2px solid var(--border-color);
+  font: inherit;
+  font-weight: 700;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.history-heading button:hover {
+  color: #fff;
+  background: #d8324f;
+  border-color: #8d1930;
+}
+
+.history-list {
+  display: grid;
+  gap: 14px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.history-card {
+  display: grid;
+  grid-template-columns: 82px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 10px;
+  padding: 10px;
+  color: var(--text-color);
+  background: var(--surface-background);
+  border: 3px solid var(--border-color);
+  box-shadow: 4px 4px 0 rgba(80, 80, 80, 0.35);
+  text-decoration: none;
+  transition: transform 0.2s ease, background-color 0.2s ease;
+}
+
+.history-card:hover,
+.history-card:focus-visible {
+  color: var(--hover-color);
+  background: var(--hover-background);
+  transform: translateY(-2px);
+}
+
+.history-card img {
+  width: 78px;
+  height: 78px;
+  object-fit: contain;
+  image-rendering: pixelated;
+}
+
+.history-card h3,
+.history-card small {
+  margin: 0;
+}
+
+.history-card time {
+  display: block;
+  margin-top: 8px;
+  color: #888;
+  font-size: 0.78rem;
+}
+
+.history-card > span {
+  font-size: 2rem;
+}
+
+.history-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 52px 20px;
+  text-align: center;
+  background: var(--surface-background);
+  border: 3px dashed var(--border-color);
+}
+
+.history-empty > span {
+  font-size: 3rem;
+}
+
+.history-empty h3,
+.history-empty p {
+  margin: 0;
+}
+
+.history-empty a {
+  padding: 9px 12px;
+  color: var(--text-color);
+  background: var(--app-background);
+  border: 2px solid var(--border-color);
+  font-weight: 700;
+  text-decoration: none;
+}

@@ -135,6 +135,43 @@ main {
   padding: 0 10px;
 }
 
+.not-found {
+  min-height: calc(100vh - 80px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  padding: 24px;
+  text-align: center;
+}
+
+.not-found-code {
+  margin: 0;
+  font-family: 'Press Start 2P';
+  font-size: clamp(3rem, 14vw, 7rem);
+}
+
+.not-found h2,
+.not-found p {
+  margin: 0;
+}
+
+.not-found a {
+  padding: 12px 18px;
+  border: 3px solid var(--border-color);
+  color: var(--text-color);
+  background: var(--app-background);
+  text-decoration: none;
+  font-weight: 700;
+}
+
+.not-found a:hover,
+.not-found a:focus-visible {
+  color: var(--hover-color);
+  background: var(--hover-background);
+}
+
 .pokeball-button {
   width: 72px;
   height: 72px;
@@ -246,12 +283,15 @@ main {
 
 .search-row {
   display: flex;
+  flex-wrap: wrap;
   gap: 12px;
   align-items: center;
 }
 
 .search-bar {
   flex: 1;
+  flex-basis: calc(100% - 63px);
+  min-width: 0;
   padding: 10px;
   border: 2px solid white;
   background-color: rgb(1, 1, 8);
@@ -340,7 +380,7 @@ main {
 .pagination button {
   background: none;
   border: none;
-  color: white;
+  color: var(--text-color);
 
   font-family: inherit;
   font-size: 1.8rem;
@@ -368,24 +408,219 @@ main {
   padding-bottom: 120px;
 }
 
+.search-submit-button {
+  flex: 1;
+  order: 3;
+  min-height: 51px;
+  padding: 0 18px;
+  color: white;
+  background: #d8324f;
+  border: 2px solid #8d1930;
+  box-shadow: 4px 4px 0 #969696;
+  font: inherit;
+  font-size: 1.05rem;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+@media (min-width: 521px) {
+  .search-row {
+    flex-wrap: nowrap;
+  }
+
+  .search-bar {
+    flex-basis: auto;
+  }
+
+  .search-submit-button {
+    flex: 0 1 auto;
+    order: initial;
+  }
+}
+
+.search-submit-button:hover,
+.search-submit-button:focus-visible {
+  transform: translateY(-2px);
+  outline: 3px solid #ffd469;
+  outline-offset: 2px;
+}
+
+.search-submit-button:disabled {
+  opacity: 0.6;
+  cursor: wait;
+  transform: none;
+}
+
+.results-summary {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 14px;
+  margin: 22px 0 34px;
+  color: var(--text-color);
+}
+
+.results-summary > strong {
+  font-size: 1.12rem;
+}
+
+.applied-filters {
+  display: flex;
+  flex-wrap: wrap;
+  column-gap: 14px;
+  row-gap: 12px;
+}
+
+.applied-filters span {
+  display: inline-flex;
+  align-items: center;
+  min-height: 32px;
+  padding: 6px 11px;
+  color: var(--text-color);
+  background: var(--surface-background);
+  border: 2px solid var(--border-color);
+  box-shadow: 3px 3px 0 #77767c;
+  font-size: 0.82rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.applied-filters button {
+  min-height: 32px;
+  padding: 6px 11px;
+  color: #d8324f;
+  background: var(--app-background);
+  border: 2px solid #d8324f;
+  box-shadow: 3px 3px 0 #77767c;
+  font: inherit;
+  font-size: 0.82rem;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.applied-filters button:hover,
+.applied-filters button:focus-visible {
+  color: #fff;
+  background: #d8324f;
+  outline: 3px solid #ffd469;
+  outline-offset: 2px;
+}
+
+.filter-loading {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  min-height: 45vh;
+  color: var(--text-color);
+  font-size: 2rem;
+}
+
+.filter-loading span {
+  animation: blink 1s infinite;
+}
+
+.filter-loading span:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.filter-loading span:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+.filter-loading p {
+  margin-left: 12px;
+  font-size: 1rem;
+}
+
+.empty-results {
+  min-height: 50vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  padding: 24px;
+  color: var(--text-color);
+  font-size: 1.25rem;
+  text-align: center;
+}
+
+.error-state,
+.pokemon-card-status {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  text-align: center;
+}
+
+.error-state {
+  min-height: 65vh;
+  padding: 24px;
+}
+
+.error-state p,
+.pokemon-card-status p {
+  margin: 0;
+}
+
+.error-state button,
+.pokemon-card-status button {
+  padding: 10px 16px;
+  border: 2px solid var(--border-color);
+  color: var(--text-color);
+  background: var(--app-background);
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.error-state button:hover,
+.pokemon-card-status button:hover {
+  color: var(--hover-color);
+  background: var(--hover-background);
+}
+
 .pokemon-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  padding: 16px 0;
 }
 
 .pokemon-card {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 20px 8px 10px;
+  justify-content: center;
+  min-height: 180px;
+  padding: 20px 8px;
 
+}
+
+.pokemon-card-link {
+  width: 100%;
+  min-height: inherit;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: inherit;
+  color: inherit;
+  text-decoration: none;
   cursor: pointer;
 }
 
-.pokemon-card:hover {
+.pokemon-card:has(.pokemon-card-link):hover,
+.pokemon-card:has(.pokemon-card-link):focus-within {
   background-color: var(--hover-background);
   color: var(--hover-color);
   transform: translateY(-3px);
+}
+
+.pokemon-card-link:focus-visible {
+  outline: 3px solid #ffd469;
+  outline-offset: -3px;
 }
 
 .pokemon-number {
@@ -393,9 +628,10 @@ main {
 }
 
 .pokemon-image {
-  width: 80px;
-  height: 80px;
+  width: 112px;
+  height: 112px;
   object-fit: contain;
+  image-rendering: pixelated;
 }
 
 .pokemon-name {
@@ -413,43 +649,16 @@ main {
   }
 
   .pokemon-grid {
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 18px;
   }
-}
 
-@media (min-width: 1024px) {
-  .pokemon-grid {
-    grid-template-columns: repeat(6, 1fr);
+  .pokemon-card {
+    min-height: 220px;
   }
-}
 
-.loading-dots {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 70vh;
-  font-size: 3rem;
-}
-
-.loading-dots span {
-  animation: blink 1s infinite;
-}
-
-.loading-dots span:nth-child(2) {
-  animation-delay: 0.2s;
-}
-
-.loading-dots span:nth-child(3) {
-  animation-delay: 0.4s;
-}
-
-@keyframes blink {
-  0%,
-  20% {
-    opacity: 0;
-  }
-  40%,
-  100% {
-    opacity: 1;
+  .pokemon-image {
+    width: 140px;
+    height: 140px;
   }
 }

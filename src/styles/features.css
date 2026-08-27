@@ -1,0 +1,86 @@
+@media (min-width: 521px) {
+  .contact-form-panel,
+  .contact-location {
+    padding: 24px;
+  }
+
+  .contact-map {
+    height: 330px;
+  }
+
+  .favorite-modal-heading {
+    align-items: center;
+    flex-wrap: nowrap;
+  }
+
+  .favorite-modal-heading img {
+    width: 90px;
+    height: 90px;
+  }
+
+  .favorite-shiny-tag {
+    margin-left: auto;
+  }
+
+  .favorite-form-actions {
+    display: flex;
+    grid-template-columns: none;
+  }
+
+  .favorite-modal {
+    padding: 26px;
+  }
+}
+
+@media (min-width: 561px) {
+  .history-heading > div {
+    align-items: end;
+    flex-direction: row;
+  }
+
+  .history-card {
+    grid-template-columns: 110px minmax(0, 1fr) auto;
+    gap: 18px;
+    padding: 12px 18px 12px 10px;
+  }
+
+  .history-card img {
+    width: 100px;
+    height: 100px;
+  }
+
+  .history-card time {
+    font-size: 0.9rem;
+  }
+
+  .favorite-card {
+    grid-template-columns: 180px minmax(0, 1fr);
+  }
+
+  .favorite-card-image {
+    min-height: 210px;
+    border-right: 2px dashed var(--border-color);
+    border-bottom: 0;
+  }
+
+  .favorite-card-image img {
+    width: 160px;
+    height: 160px;
+  }
+}
+
+@media (min-width: 821px) {
+  .contact-layout {
+    grid-template-columns: minmax(0, 1fr) minmax(360px, 0.85fr);
+  }
+
+  .contact-map {
+    height: 390px;
+  }
+}
+
+@media (min-width: 901px) {
+  .favorites-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}

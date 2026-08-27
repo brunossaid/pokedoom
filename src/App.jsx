@@ -6,6 +6,8 @@ import Pokedex from './pages/Pokedex';
 import Favorites from './pages/Favorites';
 import History from './pages/History';
 import Contact from './pages/Contact';
+import NotFound from './pages/NotFound';
+import PokemonDetail from './pages/PokemonDetail';
 
 function App() {
   return (
@@ -16,9 +18,11 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/pokedex" element={<Pokedex />} />
+          <Route path="/pokemon/:name" element={<PokemonDetail />} />
           <Route path="/favorites" element={<Favorites />} />
           <Route path="/history" element={<History />} />
           <Route path="/contact" element={<Contact />} />
+          <Route path="*" element={<NotFound />} />
         </Routes>
 
         <Menu />

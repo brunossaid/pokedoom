@@ -13,7 +13,9 @@ function Header() {
     '/contact': 'Contact',
   };
 
-  const title = titles[location.pathname] || 'PokeDoom';
+  const title = location.pathname.startsWith('/pokemon/')
+    ? 'Pokémon Details'
+    : titles[location.pathname] || 'PokeDoom';
 
   return (
     <header className="hero">

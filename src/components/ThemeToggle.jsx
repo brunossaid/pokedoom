@@ -1,22 +1,17 @@
 import { useEffect, useState } from 'react';
-
-const STORAGE_KEY = 'pokedoom-theme';
-
-function getInitialTheme() {
-  return localStorage.getItem(STORAGE_KEY) === 'light' ? 'light' : 'dark';
-}
+import { getStoredTheme, saveTheme } from '../services/preferencesStorage';
 
 function ThemeToggle() {
-  const [theme, setTheme] = useState(getInitialTheme);
+  const [theme, setTheme] = useState(getStoredTheme);
   const isDark = theme === 'dark';
 
   useEffect(() => {
     document.documentElement.dataset.theme = theme;
     document.documentElement.style.colorScheme = theme;
-    localStorage.setItem(STORAGE_KEY, theme);
+    saveTheme(theme);
   }, [theme]);
 
-  const nextThemeLabel = isDark ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro';
+  const nextThemeLabel = isDark ? 'Switch to light mode' : 'Switch to dark mode';
 
   return (
     <button
