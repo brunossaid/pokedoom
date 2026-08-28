@@ -13,7 +13,9 @@ import { getPokemonDetails, getPokemonSpecies } from './pokemonApi';
 async function getPokemonForEvolutionSpecies(speciesName, formContext) {
   const species = await getPokemonSpecies(speciesName);
   const exactCurrentVariety = species.varieties.find(
-    ({ pokemon }) => pokemon.name === formContext.pokemonName
+    ({ pokemon }) =>
+      pokemon.name === formContext.pokemonName &&
+      !MAJOR_TRANSFORMATION_PATTERN.test(pokemon.name)
   );
   const regionalVariety = formContext.region
     ? species.varieties.find(({ pokemon }) =>
@@ -54,6 +56,9 @@ async function addEvolutionNodes(chainLink, formContext) {
         pokemon.name.includes(`-${formContext.region}`)
       )
     : null;
+  const currentVariety = species.varieties.find(
+    ({ pokemon }) => pokemon.name === formContext.pokemonName
+  );
 
   if (!defaultVariety) throw new Error('No default variety found for evolution');
 
@@ -78,15 +83,18 @@ async function addEvolutionNodes(chainLink, formContext) {
     if (childEvolutionDetails.some(({ base_form: baseForm }) => !baseForm)) {
       requiredBaseForms.add(defaultVariety.pokemon.name);
     }
-    const visibleBaseForms = formContext.lockRegionalChain && formContext.region
-      ? [...requiredBaseForms].filter((baseForm) =>
-          baseForm.includes(`-${formContext.region}`)
-        )
-      : hasRegionalVariety && !formContext.region
-        ? [...requiredBaseForms].filter(
-            (baseForm) => baseForm === defaultVariety.pokemon.name
+    const visibleBaseForms = currentVariety &&
+      !MAJOR_TRANSFORMATION_PATTERN.test(currentVariety.pokemon.name)
+      ? [currentVariety.pokemon.name]
+      : formContext.lockRegionalChain && formContext.region
+        ? [...requiredBaseForms].filter((baseForm) =>
+            baseForm.includes(`-${formContext.region}`)
           )
-        : [...requiredBaseForms];
+        : hasRegionalVariety && !formContext.region
+          ? [...requiredBaseForms].filter(
+              (baseForm) => baseForm === defaultVariety.pokemon.name
+            )
+          : [...requiredBaseForms];
 
     if (visibleBaseForms.length > 0) {
       visibleBaseForms.forEach((baseFormName) => {
@@ -129,7 +137,15 @@ async function addEvolutionNodes(chainLink, formContext) {
     chainLink.evolution_details.forEach((detail) => {
       const pokemonName = detail.evolved_form?.name || defaultVariety.pokemon.name;
       const currentDetails = variantGroups.get(pokemonName)?.details || [];
-      addVariant(pokemonName, pokemonName, [...currentDetails, detail]);
+      const detailRegion = detail.region?.name || REGIONAL_FORM_NAMES.find(
+        (region) => detail.base_form?.name.includes(`-${region}`)
+      );
+      addVariant(pokemonName, pokemonName, [...currentDetails, detail], {
+        formTag:
+          hasRegionalVariety && pokemonName === defaultVariety.pokemon.name
+            ? '__default__'
+            : getVariantTag(pokemonName, chainLink.species.name) || detailRegion,
+      });
     });
 
     const genderVarieties = species.varieties.filter(({ pokemon }) =>
@@ -208,12 +224,17 @@ async function addEvolutionNodes(chainLink, formContext) {
       ]);
       const formData = formResponse?.ok ? await formResponse.json() : null;
       const matchingEvolutions = variant.formTag
-        ? evolvesTo.filter(
-            (evolution) =>
-              evolution.baseForms.includes(variant.pokemonName) ||
-              !evolution.formTag ||
-              evolution.formTag === variant.formTag
-          )
+        ? evolvesTo.filter((evolution) => {
+            if (evolution.baseForms.length > 0) {
+              return evolution.baseForms.includes(variant.pokemonName);
+            }
+
+            if (evolution.formTag) {
+              return evolution.formTag === variant.formTag;
+            }
+
+            return variant.formTag === '__default__';
+          })
         : evolvesTo;
 
       return {
