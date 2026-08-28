@@ -258,6 +258,19 @@ async function addEvolutionNodes(chainLink, formContext) {
   );
 }
 
+function findEvolutionDetails(chainLink, speciesName) {
+  if (chainLink.species.name === speciesName) {
+    return chainLink.evolution_details;
+  }
+
+  for (const evolution of chainLink.evolves_to) {
+    const details = findEvolutionDetails(evolution, speciesName);
+    if (details) return details;
+  }
+
+  return null;
+}
+
 export async function getPokemonEvolutionFamily(speciesName, pokemonName = speciesName) {
   const speciesData = await getPokemonSpecies(speciesName);
   const formContext = getFormContext(pokemonName);
@@ -276,15 +289,24 @@ export async function getPokemonEvolutionFamily(speciesName, pokemonName = speci
   }
 
   const evolutionData = await evolutionResponse.json();
+  const currentEvolutionDetails = findEvolutionDetails(evolutionData.chain, speciesName) || [];
+  const inferredRegion = formContext.region || currentEvolutionDetails
+    .map((detail) =>
+      detail.region?.name || REGIONAL_FORM_NAMES.find(
+        (region) => detail.base_form?.name.includes(`-${region}`)
+      )
+    )
+    .find(Boolean);
   const rootSpeciesName = evolutionData.chain.species.name;
   const rootSpeciesData = rootSpeciesName === speciesName
     ? speciesData
     : await getPokemonSpecies(rootSpeciesName);
   const chainFormContext = {
     ...formContext,
+    region: inferredRegion,
     lockRegionalChain: Boolean(
-      formContext.region && rootSpeciesData.varieties.some(({ pokemon }) =>
-        pokemon.name.includes(`-${formContext.region}`)
+      inferredRegion && rootSpeciesData.varieties.some(({ pokemon }) =>
+        pokemon.name.includes(`-${inferredRegion}`)
       )
     ),
   };
