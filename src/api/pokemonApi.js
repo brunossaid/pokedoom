@@ -16,6 +16,11 @@ export async function getPokemonForms(forms = []) {
   if (forms.length <= 1) return [];
   return Promise.all(forms.map(async ({ name, url }) => {
     const form = await fetchJson(url, 'Failed to fetch Pokémon form');
-    return { name, label: form.form_name || name, image: form.sprites.front_default, shinyImage: form.sprites.front_shiny };
+    return {
+      name,
+      label: form.form_name || name,
+      image: form.sprites.front_default || '/images/image-fallback.png',
+      shinyImage: form.sprites.front_shiny,
+    };
   }));
 }
