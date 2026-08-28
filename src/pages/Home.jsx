@@ -4,6 +4,7 @@ import { ErrorState, LoadingState } from '../components/AsyncState';
 import { capitalize } from '../utils/textUtils';
 import { useRandomPokemon } from '../hooks/useRandomPokemon';
 import { useHistory } from '../hooks/useHistory';
+import { handleImageError } from '../utils/imageFallback';
 
 function Home() {
   const { history } = useHistory();
@@ -40,6 +41,10 @@ function Home() {
           <div className="daily-pokemon-card">
             <img
               className="daily-pokemon-image"
+              width="140"
+              height="140"
+              fetchPriority="high"
+              onError={handleImageError}
               src={
                 randomPokemon.sprites.other['official-artwork'].front_default ||
                 randomPokemon.sprites.front_default ||

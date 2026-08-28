@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { getPokemonDetails } from '../api/pokeApi';
 import { capitalize } from '../utils/textUtils';
+import { handleImageError } from '../utils/imageFallback';
 import { ErrorState, LoadingState } from './AsyncState';
 
 function PokemonCard({ pokemon, returnTo = '/pokedex' }) {
@@ -48,6 +49,7 @@ function PokemonCard({ pokemon, returnTo = '/pokedex' }) {
         >
           <img
             className="pokemon-image"
+            onError={handleImageError}
             src={
               pokemonDetails.sprites.front_default ||
               '/images/image-fallback.png'
@@ -58,14 +60,6 @@ function PokemonCard({ pokemon, returnTo = '/pokedex' }) {
           <span className="pokemon-number">#{pokemonDetails.id}</span>
 
           <h3 className="pokemon-name">{capitalize(pokemonDetails.name)}</h3>
-
-          {/**  
-          <div>
-            {pokemonDetails.types.map((type) => (
-              <span key={type.type.name}>{type.type.name}</span>
-            ))}
-          </div>
-          */}
         </Link>
       ) : (
         <LoadingState className="pokemon-card-status" label={`Loading ${pokemon.name}`} />

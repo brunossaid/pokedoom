@@ -1,6 +1,7 @@
 import { useRef, useState } from 'react';
 import { capitalize } from '../utils/textUtils';
 import { useModalAccessibility } from '../hooks/useModalAccessibility';
+import { handleImageError } from '../utils/imageFallback';
 
 function FavoriteModal({ pokemon, appearance, image, existingFavorite, onClose, onSave }) {
   const [priority, setPriority] = useState(existingFavorite?.priority || 1);
@@ -55,7 +56,7 @@ function FavoriteModal({ pokemon, appearance, image, existingFavorite, onClose, 
         </button>
 
         <div className="favorite-modal-heading">
-          <img src={image} alt="" />
+          <img src={image} alt="" onError={handleImageError} />
           <div>
             <small>{appearanceLabel} appearance</small>
             <h2 id="favorite-modal-title">

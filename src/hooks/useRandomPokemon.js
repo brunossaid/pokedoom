@@ -17,8 +17,12 @@ export function useRandomPokemon() {
 
       try {
         const randomId = Math.floor(Math.random() * 1025) + 1;
-        const pokemonData = await getPokemonDetails(randomId);
-        const speciesData = await getPokemonSpecies(pokemonData.name);
+
+        // Solicita ambos recursos a la vez para mostrar la tarjeta destacada lo antes posible.
+        const [pokemonData, speciesData] = await Promise.all([
+          getPokemonDetails(randomId),
+          getPokemonSpecies(randomId),
+        ]);
 
         if (!cancelled) {
           setPokemon(pokemonData);
