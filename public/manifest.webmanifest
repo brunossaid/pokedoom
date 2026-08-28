@@ -1,0 +1,24 @@
+{
+  "name": "PokeDoom",
+  "short_name": "PokeDoom",
+  "description": "Explore Pokémon, their types and evolutions, and manage your favorites.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#03030c",
+  "theme_color": "#03030c",
+  "icons": [
+    {
+      "src": "/images/pwa-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/images/pwa-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

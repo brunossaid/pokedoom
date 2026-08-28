@@ -2,6 +2,7 @@ import { Routes, Route } from 'react-router-dom';
 import Header from './components/Header';
 import Menu from './components/Menu';
 import Footer from './components/Footer';
+import OfflineBanner from './components/OfflineBanner';
 import Home from './pages/Home';
 import Pokedex from './pages/Pokedex';
 import Favorites from './pages/Favorites';
@@ -13,6 +14,8 @@ import PokemonDetail from './pages/PokemonDetail';
 function App() {
   return (
     <div className="app-container">
+      {/* Informa cambios de conexión sin bloquear la navegación ni el contenido cacheado. */}
+      <OfflineBanner />
       <Header />
 
       <main className="content">

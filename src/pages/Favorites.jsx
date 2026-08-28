@@ -5,6 +5,7 @@ import ConfirmModal from '../components/ConfirmModal';
 import Pagination from '../components/Pagination';
 import { capitalize } from '../utils/textUtils';
 import { useFavorites } from '../hooks/useFavorites';
+import { handleImageError } from '../utils/imageFallback';
 
 const FAVORITES_PER_PAGE = 6;
 
@@ -192,7 +193,11 @@ function Favorites() {
             <article className="favorite-card" key={favorite.id}>
               <div className="favorite-card-image">
                 {favorite.isShiny && <span>✦ SHINY</span>}
-                <img src={favorite.image} alt={`${favorite.name} ${favorite.appearance}`} />
+                <img
+                  src={favorite.image}
+                  alt={`${favorite.name} ${favorite.appearance}`}
+                  onError={handleImageError}
+                />
               </div>
 
               <div className="favorite-card-content">

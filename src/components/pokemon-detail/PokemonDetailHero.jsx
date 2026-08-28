@@ -1,5 +1,6 @@
 import FavoriteModal from '../FavoriteModal';
 import { capitalize } from '../../utils/textUtils';
+import { handleImageError } from '../../utils/imageFallback';
 
 const displayName = (name) => name.split('-').map(capitalize).join(' ');
 
@@ -9,7 +10,7 @@ function PokemonDetailHero({ pokemon, forms, appearance, setAppearance, selected
   return <>
     <section className="detail-hero" aria-labelledby="pokemon-detail-name">
       <div className="detail-image-panel">
-        <div className="detail-image-frame">{isShiny && <span className="shiny-badge">✦ SHINY</span>}<img src={image} alt={`${pokemon.name}${isShiny ? ' shiny' : ''}`} /></div>
+        <div className="detail-image-frame">{isShiny && <span className="shiny-badge">✦ SHINY</span>}<img src={image} alt={`${pokemon.name}${isShiny ? ' shiny' : ''}`} onError={handleImageError} /></div>
         <div className="gender-form-toggle" aria-label="Choose Pokémon appearance">
           {forms.length > 1 ? forms.map((form) => <button type="button" className={selectedForm?.name === form.name ? 'active' : ''}
             onClick={() => setAppearance(`form:${form.name}${isShiny && form.shinyImage ? ':shiny' : ''}`)} aria-pressed={selectedForm?.name === form.name} key={form.name}>{displayName(form.label)}</button>)

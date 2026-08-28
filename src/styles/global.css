@@ -12,6 +12,7 @@
   --hover-background: #ffffff;
   --hover-color: #000000;
   --bottom-fade: #000000;
+  --welcome-label-color: #ff7188;
 }
 
 :root[data-theme='light'] {
@@ -24,6 +25,7 @@
   --hover-background: #151923;
   --hover-color: #ffffff;
   --bottom-fade: #d9e1e8;
+  --welcome-label-color: #9f1f36;
 }
 
 body {
