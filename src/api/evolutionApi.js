@@ -20,8 +20,11 @@ async function getPokemonForEvolutionSpecies(speciesName, formContext) {
         pokemon.name.includes(`-${formContext.region}`)
       )
     : null;
-  const defaultVariety = species.varieties.find(({ is_default: isDefault }) => isDefault);
-  const selectedVariety = exactCurrentVariety || regionalVariety || defaultVariety;
+  const defaultVariety = species.varieties.find(
+    ({ is_default: isDefault }) => isDefault
+  );
+  const selectedVariety =
+    exactCurrentVariety || regionalVariety || defaultVariety;
 
   if (!selectedVariety) {
     throw new Error('No suitable Pokémon variety found for this species');
@@ -45,7 +48,9 @@ async function addItemSprites(evolutionDetails) {
 
 async function addEvolutionNodes(chainLink, formContext) {
   const species = await getPokemonSpecies(chainLink.species.name);
-  const defaultVariety = species.varieties.find(({ is_default: isDefault }) => isDefault);
+  const defaultVariety = species.varieties.find(
+    ({ is_default: isDefault }) => isDefault
+  );
   const hasRegionalVariety = species.varieties.some(({ pokemon }) =>
     REGIONAL_FORM_NAMES.some((region) => pokemon.name.includes(`-${region}`))
   );
@@ -55,7 +60,8 @@ async function addEvolutionNodes(chainLink, formContext) {
       )
     : null;
 
-  if (!defaultVariety) throw new Error('No default variety found for evolution');
+  if (!defaultVariety)
+    throw new Error('No default variety found for evolution');
 
   const variantGroups = new Map();
   const addVariant = (key, pokemonName, details, options = {}) => {
@@ -64,7 +70,9 @@ async function addEvolutionNodes(chainLink, formContext) {
       details,
       formName: options.formName || null,
       formUrl: options.formUrl || null,
-      formTag: options.formTag ?? getVariantTag(options.formName || pokemonName, chainLink.species.name),
+      formTag:
+        options.formTag ??
+        getVariantTag(options.formName || pokemonName, chainLink.species.name),
     });
   };
 
@@ -73,20 +81,23 @@ async function addEvolutionNodes(chainLink, formContext) {
       ({ evolution_details: evolutionDetails }) => evolutionDetails
     );
     const requiredBaseForms = new Set(
-      childEvolutionDetails.map(({ base_form: baseForm }) => baseForm?.name).filter(Boolean)
+      childEvolutionDetails
+        .map(({ base_form: baseForm }) => baseForm?.name)
+        .filter(Boolean)
     );
     if (childEvolutionDetails.some(({ base_form: baseForm }) => !baseForm)) {
       requiredBaseForms.add(defaultVariety.pokemon.name);
     }
-    const visibleBaseForms = formContext.lockRegionalChain && formContext.region
-      ? [...requiredBaseForms].filter((baseForm) =>
-          baseForm.includes(`-${formContext.region}`)
-        )
-      : hasRegionalVariety && !formContext.region
-        ? [...requiredBaseForms].filter(
-            (baseForm) => baseForm === defaultVariety.pokemon.name
+    const visibleBaseForms =
+      formContext.lockRegionalChain && formContext.region
+        ? [...requiredBaseForms].filter((baseForm) =>
+            baseForm.includes(`-${formContext.region}`)
           )
-        : [...requiredBaseForms];
+        : hasRegionalVariety && !formContext.region
+          ? [...requiredBaseForms].filter(
+              (baseForm) => baseForm === defaultVariety.pokemon.name
+            )
+          : [...requiredBaseForms];
 
     if (visibleBaseForms.length > 0) {
       visibleBaseForms.forEach((baseFormName) => {
@@ -98,7 +109,10 @@ async function addEvolutionNodes(chainLink, formContext) {
         });
       });
     } else {
-      const pokemon = await getPokemonForEvolutionSpecies(chainLink.species.name, formContext);
+      const pokemon = await getPokemonForEvolutionSpecies(
+        chainLink.species.name,
+        formContext
+      );
       if (pokemon.forms.length > 1) {
         pokemon.forms.forEach((form) => {
           addVariant(form.name, pokemon.name, [], {
@@ -127,7 +141,8 @@ async function addEvolutionNodes(chainLink, formContext) {
     );
   } else {
     chainLink.evolution_details.forEach((detail) => {
-      const pokemonName = detail.evolved_form?.name || defaultVariety.pokemon.name;
+      const pokemonName =
+        detail.evolved_form?.name || defaultVariety.pokemon.name;
       const currentDetails = variantGroups.get(pokemonName)?.details || [];
       addVariant(pokemonName, pokemonName, [...currentDetails, detail]);
     });
@@ -146,14 +161,19 @@ async function addEvolutionNodes(chainLink, formContext) {
         addVariant(
           pokemon.name,
           pokemon.name,
-          chainLink.evolution_details.map((detail) => ({ ...detail, formGender }))
+          chainLink.evolution_details.map((detail) => ({
+            ...detail,
+            formGender,
+          }))
         );
       });
     } else if (!hasExplicitEvolvedForms) {
       const evolutionVarieties = species.varieties.filter(
         ({ pokemon }) =>
           !MAJOR_TRANSFORMATION_PATTERN.test(pokemon.name) &&
-          !REGIONAL_FORM_NAMES.some((region) => pokemon.name.includes(`-${region}`)) &&
+          !REGIONAL_FORM_NAMES.some((region) =>
+            pokemon.name.includes(`-${region}`)
+          ) &&
           !pokemon.name.includes('-totem')
       );
 
@@ -195,7 +215,9 @@ async function addEvolutionNodes(chainLink, formContext) {
   }
 
   const descendantGroups = await Promise.all(
-    chainLink.evolves_to.map((evolution) => addEvolutionNodes(evolution, formContext))
+    chainLink.evolves_to.map((evolution) =>
+      addEvolutionNodes(evolution, formContext)
+    )
   );
   const evolvesTo = descendantGroups.flat();
 
@@ -221,13 +243,18 @@ async function addEvolutionNodes(chainLink, formContext) {
         name: pokemon.name,
         displayName: variant.formName || pokemon.name,
         formTag: variant.formTag,
-        baseForms: [...new Set(
-          variant.details.map(({ base_form: baseForm }) => baseForm?.name).filter(Boolean)
-        )],
+        baseForms: [
+          ...new Set(
+            variant.details
+              .map(({ base_form: baseForm }) => baseForm?.name)
+              .filter(Boolean)
+          ),
+        ],
         speciesName: chainLink.species.name,
         image:
+          pokemon.sprites.other?.showdown?.front_default ||
           formData?.sprites?.front_default ||
-          pokemon.sprites.other['official-artwork'].front_default ||
+          pokemon.sprites.other?.['official-artwork']?.front_default ||
           pokemon.sprites.front_default ||
           '/images/image-fallback.png',
         evolutionDetails,
@@ -237,7 +264,10 @@ async function addEvolutionNodes(chainLink, formContext) {
   );
 }
 
-export async function getPokemonEvolutionFamily(speciesName, pokemonName = speciesName) {
+export async function getPokemonEvolutionFamily(
+  speciesName,
+  pokemonName = speciesName
+) {
   const speciesData = await getPokemonSpecies(speciesName);
   const formContext = getFormContext(pokemonName);
 
@@ -256,13 +286,15 @@ export async function getPokemonEvolutionFamily(speciesName, pokemonName = speci
 
   const evolutionData = await evolutionResponse.json();
   const rootSpeciesName = evolutionData.chain.species.name;
-  const rootSpeciesData = rootSpeciesName === speciesName
-    ? speciesData
-    : await getPokemonSpecies(rootSpeciesName);
+  const rootSpeciesData =
+    rootSpeciesName === speciesName
+      ? speciesData
+      : await getPokemonSpecies(rootSpeciesName);
   const chainFormContext = {
     ...formContext,
     lockRegionalChain: Boolean(
-      formContext.region && rootSpeciesData.varieties.some(({ pokemon }) =>
+      formContext.region &&
+      rootSpeciesData.varieties.some(({ pokemon }) =>
         pokemon.name.includes(`-${formContext.region}`)
       )
     ),
@@ -277,7 +309,9 @@ export async function getPokemonEvolutionFamily(speciesName, pokemonName = speci
     chain: chainNodes,
     specialForms: familyForms
       .flat()
-      .filter((form) => !getEvolutionPokemonNames(chainNodes).includes(form.name)),
+      .filter(
+        (form) => !getEvolutionPokemonNames(chainNodes).includes(form.name)
+      ),
   };
 }
 
@@ -298,7 +332,9 @@ export async function getPokemonSpecialForms(speciesName) {
   );
   const specialVarieties = speciesData.varieties.filter(
     ({ is_default: isDefault, pokemon }) =>
-      alternateVarieties.some((variety) => variety.pokemon.name === pokemon.name) ||
+      alternateVarieties.some(
+        (variety) => variety.pokemon.name === pokemon.name
+      ) ||
       (isDefault && hasRegularAlternateForms)
   );
 
@@ -311,20 +347,23 @@ export async function getPokemonSpecialForms(speciesName) {
       const formData = formResponse.ok
         ? await formResponse.json()
         : { trigger_conditions: [] };
-      const triggerConditions = formData.trigger_conditions?.length > 0
-        ? formData.trigger_conditions
-        : FORM_REQUIREMENT_FALLBACKS[details.name] || [];
+      const triggerConditions =
+        formData.trigger_conditions?.length > 0
+          ? formData.trigger_conditions
+          : FORM_REQUIREMENT_FALLBACKS[details.name] || [];
       const requirements = await Promise.all(
         triggerConditions.map(async (condition) => {
-          const resourceUrl = condition.url || (
-            condition.trigger === 'item' && condition.name
+          const resourceUrl =
+            condition.url ||
+            (condition.trigger === 'item' && condition.name
               ? `${BASE_URL}/item/${encodeURIComponent(condition.name)}`
-              : null
-          );
+              : null);
           if (!resourceUrl) return { ...condition, sprite: null };
 
           const resourceResponse = await fetch(resourceUrl);
-          const resourceData = resourceResponse.ok ? await resourceResponse.json() : null;
+          const resourceData = resourceResponse.ok
+            ? await resourceResponse.json()
+            : null;
 
           return {
             ...condition,
@@ -341,7 +380,8 @@ export async function getPokemonSpecialForms(speciesName) {
       return {
         name: details.name,
         image:
-          details.sprites.other['official-artwork'].front_default ||
+          details.sprites.other?.showdown?.front_default ||
+          details.sprites.other?.['official-artwork']?.front_default ||
           details.sprites.front_default ||
           '/images/image-fallback.png',
         types: details.types.map(({ type }) => type.name),
@@ -363,4 +403,3 @@ export async function getPokemonSpecialForms(speciesName) {
     })
   );
 }
-

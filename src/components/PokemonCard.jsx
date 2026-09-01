@@ -38,8 +38,11 @@ function PokemonCard({ pokemon, returnTo = '/pokedex' }) {
   return (
     <div className="pokemon-card">
       {error ? (
-        <ErrorState className="pokemon-card-status" message={`Unable to load ${capitalize(pokemon.name)}.`}
-          onRetry={() => setRetryCount((currentCount) => currentCount + 1)} />
+        <ErrorState
+          className="pokemon-card-status"
+          message={`Unable to load ${capitalize(pokemon.name)}.`}
+          onRetry={() => setRetryCount((currentCount) => currentCount + 1)}
+        />
       ) : pokemonDetails ? (
         <Link
           className="pokemon-card-link"
@@ -49,6 +52,9 @@ function PokemonCard({ pokemon, returnTo = '/pokedex' }) {
           <img
             className="pokemon-image"
             src={
+              pokemonDetails.sprites.other?.showdown?.front_default ||
+              pokemonDetails.sprites.other?.['official-artwork']
+                ?.front_default ||
               pokemonDetails.sprites.front_default ||
               '/images/image-fallback.png'
             }
@@ -68,7 +74,10 @@ function PokemonCard({ pokemon, returnTo = '/pokedex' }) {
           */}
         </Link>
       ) : (
-        <LoadingState className="pokemon-card-status" label={`Loading ${pokemon.name}`} />
+        <LoadingState
+          className="pokemon-card-status"
+          label={`Loading ${pokemon.name}`}
+        />
       )}
     </div>
   );

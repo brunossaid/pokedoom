@@ -51,7 +51,9 @@ function Contact() {
               <span aria-hidden="true">✓</span>
               <div>
                 <strong>Message ready!</strong>
-                <p>This demo has no backend, so no information was transmitted.</p>
+                <p>
+                  This demo has no backend, so no information was transmitted.
+                </p>
               </div>
             </div>
           )}
@@ -70,7 +72,11 @@ function Contact() {
               placeholder="Ash Ketchum"
               required
             />
-            {errors.name && <p className="field-error" id="contact-name-error">{errors.name}</p>}
+            {errors.name && (
+              <p className="field-error" id="contact-name-error">
+                {errors.name}
+              </p>
+            )}
 
             <label htmlFor="contact-email">Email *</label>
             <input
@@ -81,11 +87,17 @@ function Contact() {
               value={form.email}
               onChange={updateField}
               aria-invalid={Boolean(errors.email)}
-              aria-describedby={errors.email ? 'contact-email-error' : undefined}
+              aria-describedby={
+                errors.email ? 'contact-email-error' : undefined
+              }
               placeholder="trainer@example.com"
               required
             />
-            {errors.email && <p className="field-error" id="contact-email-error">{errors.email}</p>}
+            {errors.email && (
+              <p className="field-error" id="contact-email-error">
+                {errors.email}
+              </p>
+            )}
 
             <div className="contact-message-label">
               <label htmlFor="contact-message">Message *</label>
@@ -99,14 +111,26 @@ function Contact() {
               maxLength="500"
               rows="7"
               aria-invalid={Boolean(errors.message)}
-              aria-describedby={errors.message ? 'contact-message-error' : 'contact-message-help'}
+              aria-describedby={
+                errors.message
+                  ? 'contact-message-error'
+                  : 'contact-message-help'
+              }
               placeholder="Write your message here..."
               required
             />
-            <small className="field-help" id="contact-message-help">Minimum 10 characters.</small>
-            {errors.message && <p className="field-error" id="contact-message-error">{errors.message}</p>}
+            <small className="field-help" id="contact-message-help">
+              Minimum 10 characters.
+            </small>
+            {errors.message && (
+              <p className="field-error" id="contact-message-error">
+                {errors.message}
+              </p>
+            )}
 
-            <button type="submit" className="contact-submit">Send message</button>
+            <button type="submit" className="contact-submit">
+              Send message
+            </button>
           </form>
         </div>
 

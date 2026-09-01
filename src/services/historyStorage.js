@@ -28,17 +28,18 @@ export function getHistory() {
 
 export function addHistoryEntry(entry) {
   const history = getHistory();
-  const nextHistory = [entry, ...history.filter((item) => item.id !== entry.id)].slice(
-    0,
-    HISTORY_LIMIT
-  );
+  const nextHistory = [
+    entry,
+    ...history.filter((item) => item.id !== entry.id),
+  ].slice(0, HISTORY_LIMIT);
   writeStoredList(STORAGE_KEYS.history, nextHistory);
   return nextHistory;
 }
 
 export function recordPokemonView(pokemon) {
   const image =
-    pokemon.sprites.other['official-artwork'].front_default ||
+    pokemon.sprites.other?.showdown?.front_default ||
+    pokemon.sprites.other?.['official-artwork']?.front_default ||
     pokemon.sprites.front_default ||
     '/images/image-fallback.png';
 

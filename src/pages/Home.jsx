@@ -41,7 +41,9 @@ function Home() {
             <img
               className="daily-pokemon-image"
               src={
-                randomPokemon.sprites.other['official-artwork'].front_default ||
+                randomPokemon.sprites.other?.showdown?.front_default ||
+                randomPokemon.sprites.other?.['official-artwork']
+                  ?.front_default ||
                 randomPokemon.sprites.front_default ||
                 '/images/image-fallback.png'
               }
@@ -87,7 +89,7 @@ function Home() {
         {history.length > 0 ? (
           <>
             <div className="home-history-grid">
-              {history.slice(0, 3).map((pokemon) => (
+              {history.slice(0, 4).map((pokemon) => (
                 <PokemonCard key={pokemon.id} pokemon={pokemon} returnTo="/" />
               ))}
             </div>
@@ -100,7 +102,6 @@ function Home() {
           <p>No Pokémon viewed yet.</p>
         )}
       </section>
-
     </div>
   );
 }
