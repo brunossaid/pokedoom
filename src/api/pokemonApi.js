@@ -32,7 +32,7 @@ export async function getPokemonForms(forms = []) {
       return {
         name,
         label: form.form_name || name,
-        image: form.sprites.front_default,
+        image: form.sprites.front_default || '/images/image-fallback.png',
         shinyImage: form.sprites.front_shiny,
       };
     })

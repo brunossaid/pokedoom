@@ -1,5 +1,6 @@
 import FavoriteModal from '../FavoriteModal';
 import { capitalize } from '../../utils/textUtils';
+import { handleImageError } from '../../utils/imageFallback';
 
 const displayName = (name) => name.split('-').map(capitalize).join(' ');
 
@@ -33,6 +34,7 @@ function PokemonDetailHero({
             <img
               src={image}
               alt={`${pokemon.name}${isShiny ? ' shiny' : ''}`}
+              onError={handleImageError}
             />
           </div>
           <div

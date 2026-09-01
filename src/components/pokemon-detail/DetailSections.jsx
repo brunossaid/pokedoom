@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import { capitalize } from '../../utils/textUtils';
+import { handleImageError } from '../../utils/imageFallback';
 
 function formatDisplayName(name) {
   return name.split('-').map(capitalize).join(' ');
@@ -52,7 +53,7 @@ function EvolutionNode({ node, currentPokemon, returnTo }) {
           <div className="evolution-options">
             {uniqueDetails.map((detail, index) => (
               <small key={`${formatEvolutionCondition(detail)}-${index}`}>
-                {detail.itemSprite && <img src={detail.itemSprite} alt="" />}
+                {detail.itemSprite && <img src={detail.itemSprite} alt="" onError={handleImageError} />}
                 {formatEvolutionCondition(detail)}
               </small>
             ))}
@@ -65,7 +66,7 @@ function EvolutionNode({ node, currentPokemon, returnTo }) {
         state={{ returnTo }}
         aria-current={node.name === currentPokemon ? 'page' : undefined}
       >
-        <img src={node.image} alt="" />
+        <img src={node.image} alt="" onError={handleImageError} />
         <strong>{formatDisplayName(node.displayName || node.name)}</strong>
       </Link>
       {node.evolvesTo.length > 0 && (
@@ -209,10 +210,10 @@ export function PokemonEvolutions({ chain, specialForms, currentPokemon, returnT
               <div className="special-forms-grid">
                 {specialForms.map((form) => (
                   <Link className="special-form-card" to={`/pokemon/${form.name}`} state={{ returnTo }} key={form.name}>
-                    <small>{form.category}</small><img src={form.image} alt="" /><strong>{formatDisplayName(form.name)}</strong>
+                    <small>{form.category}</small><img src={form.image} alt="" onError={handleImageError} /><strong>{formatDisplayName(form.name)}</strong>
                     {form.requirements.length > 0 && <div className="special-form-requirements">{form.requirements.map((requirement) => (
                       <span key={`${requirement.trigger}-${requirement.name || 'condition'}`}>
-                        {requirement.sprite && <img src={requirement.sprite} alt="" />}{formatSpecialRequirement(requirement)}
+                        {requirement.sprite && <img src={requirement.sprite} alt="" onError={handleImageError} />}{formatSpecialRequirement(requirement)}
                       </span>
                     ))}</div>}
                     <div className="special-form-types">{form.types.map((type) => <span className={`pokemon-type effectiveness-type type-${type}`} key={type}>{capitalize(type)}</span>)}</div>

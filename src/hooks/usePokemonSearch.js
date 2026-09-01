@@ -4,7 +4,10 @@ export function usePokemonSearch({ allPokemon, pokemonList, search, selectedType
   const filteredPokemon = allPokemon.filter(({ name }) => {
     const matchesSearch = name.toLowerCase().includes(search.toLowerCase());
     const matchesType = !selectedType || typePokemon.some((pokemon) => pokemon.name === name);
-    const matchesRegion = !selectedRegion || regionPokemon.some((pokemon) => pokemon.name === name);
+    const matchesRegion =
+      !selectedRegion ||
+      name.includes(`-${selectedRegion}`) ||
+      regionPokemon.some((pokemon) => pokemon.name === name);
     return matchesSearch && matchesType && matchesRegion;
   });
   const hasFilters = Boolean(search || selectedType || selectedRegion);

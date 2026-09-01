@@ -4,6 +4,7 @@ import { capitalize } from '../utils/textUtils';
 import ConfirmModal from '../components/ConfirmModal';
 import Pagination from '../components/Pagination';
 import { useHistory } from '../hooks/useHistory';
+import { handleImageError } from '../utils/imageFallback';
 
 const HISTORY_PER_PAGE = 10;
 
@@ -63,7 +64,7 @@ function History() {
                 to={`/pokemon/${entry.name}`}
                 state={{ returnTo: '/history' }}
               >
-                <img src={entry.image} alt="" />
+                <img src={entry.image} alt="" onError={handleImageError} />
                 <div>
                   <small>#{entry.pokemonId}</small>
                   <h3>{capitalize(entry.name)}</h3>
