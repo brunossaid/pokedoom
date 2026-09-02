@@ -18,7 +18,12 @@ function Header() {
 
   useEffect(() => {
     function handleScroll() {
-      setScrolled(window.scrollY > 30);
+      setScrolled((current) => {
+        if (window.scrollY > 40) return true;
+        if (window.scrollY <= 5) return false;
+
+        return current;
+      });
     }
 
     window.addEventListener('scroll', handleScroll);
@@ -54,7 +59,8 @@ function Header() {
       [...favorites]
         .sort(
           (first, second) =>
-            first.rating - second.rating || first.name.localeCompare(second.name)
+            first.rating - second.rating ||
+            first.name.localeCompare(second.name)
         )
         .map((favorite) => favorite.pokemonName || favorite.name)
     ),
@@ -97,8 +103,9 @@ function Header() {
         scrolled ? 'scrolled' : ''
       }`}
     >
-      {isPokemonDetail && !isHistoryDetail && (
-        previousPokemonName ? (
+      {isPokemonDetail &&
+        !isHistoryDetail &&
+        (previousPokemonName ? (
           <Link
             className="hero-arrow"
             to={`/pokemon/${previousPokemonName}`}
@@ -116,15 +123,15 @@ function Header() {
           >
             ‹
           </button>
-        )
-      )}
+        ))}
 
       <Link to="/" className="hero-link">
         <h1>{title}</h1>
       </Link>
 
-      {isPokemonDetail && !isHistoryDetail && (
-        nextPokemonName ? (
+      {isPokemonDetail &&
+        !isHistoryDetail &&
+        (nextPokemonName ? (
           <Link
             className="hero-arrow"
             to={`/pokemon/${nextPokemonName}`}
@@ -146,8 +153,7 @@ function Header() {
           >
             ›
           </button>
-        )
-      )}
+        ))}
     </header>
   );
 }

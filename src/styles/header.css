@@ -19,6 +19,10 @@
   border-bottom: none;
 }
 
+.hero.no-border.scrolled {
+  border-bottom: 2px solid var(--border-color);
+}
+
 .hero-arrow {
   display: inline-flex;
   align-items: center;
