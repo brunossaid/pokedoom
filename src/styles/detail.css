@@ -431,20 +431,32 @@
   font-size: 1.6rem;
 }
 
-.evolution-condition small {
+.evolution-options small {
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   gap: 6px;
   min-height: 28px;
   color: #888;
   font-size: 0.95rem;
-  text-align: center;
+  text-align: left;
 }
 
 .evolution-options {
   display: grid;
   gap: 6px;
+  margin: 0;
+  padding-left: 40px;
+  list-style-type: square;
+  text-align: left;
+}
+
+.evolution-options li {
+  padding-left: 2px;
+}
+
+.evolution-options li:first-child {
+  list-style: none;
 }
 
 .evolution-expand-button {
@@ -460,13 +472,7 @@
   transform: translateY(1px);
 }
 
-.evolution-condition small + small::before {
-  content: 'or';
-  margin-right: 2px;
-  color: var(--text-color);
-}
-
-.evolution-condition small img {
+.evolution-options small img {
   width: 28px;
   height: 28px;
   object-fit: contain;
