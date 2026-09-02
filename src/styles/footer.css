@@ -13,6 +13,7 @@
   font-size: 0.75rem;
 }
 .site-footer a {
+  display: inline-block;
   padding: 1px 4px;
   color: inherit;
   font-weight: bold;
@@ -22,8 +23,8 @@
 }
 .site-footer a:hover,
 .site-footer a:focus-visible {
-  background-color: var(--hover-background);
-  color: var(--hover-color);
+  color: #d8324f;
+  transform: translateY(-2px);
 }
 .site-footer a:focus-visible {
   outline: 2px solid var(--border-color);

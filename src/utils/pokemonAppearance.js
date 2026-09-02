@@ -8,8 +8,7 @@ export function getPokemonAppearance(pokemon, forms, selectedAppearance) {
   const femaleImage =
     pokemon.sprites.other?.showdown?.front_female ||
     pokemon.sprites.other?.home?.front_female ||
-    pokemon.sprites.front_female ||
-    defaultImage;
+    pokemon.sprites.front_female;
 
   const shinyImage =
     pokemon.sprites.other?.showdown?.front_shiny ||
@@ -21,8 +20,8 @@ export function getPokemonAppearance(pokemon, forms, selectedAppearance) {
   const shinyFemaleImage =
     pokemon.sprites.other?.showdown?.front_shiny_female ||
     pokemon.sprites.other?.home?.front_shiny_female ||
-    pokemon.sprites.front_shiny_female ||
-    shinyImage;
+    pokemon.sprites.front_shiny_female;
+
   const formImages = Object.fromEntries(
     forms
       .flatMap((form) => [

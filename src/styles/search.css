@@ -110,7 +110,7 @@
 }
 
 .pokedex-container {
-  padding-bottom: 120px;
+  padding-bottom: 40px;
 }
 
 .search-submit-button {
@@ -245,4 +245,3 @@
   font-size: 1.25rem;
   text-align: center;
 }
-

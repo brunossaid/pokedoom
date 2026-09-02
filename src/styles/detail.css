@@ -1,7 +1,7 @@
 .pokemon-detail {
   max-width: 980px;
   margin: 0 auto;
-  padding: 24px 10px 140px;
+  padding: 24px 10px 40px;
 }
 
 .detail-back-link {
@@ -61,14 +61,20 @@
   font-weight: 700;
 }
 
-.gender-form-toggle {
+.appearance-controls {
   display: flex;
-  gap: 8px;
+  gap: 20px;
   flex-wrap: wrap;
   justify-content: center;
 }
 
-.gender-form-toggle button {
+.appearance-group {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+}
+
+.appearance-controls button {
   padding: 7px 10px;
   border: 2px solid var(--border-color);
   color: var(--text-color);
@@ -78,14 +84,37 @@
   cursor: pointer;
 }
 
-.gender-form-toggle button:hover {
+.appearance-controls button:hover {
   transform: translateY(-2px);
 }
 
-.gender-form-toggle button.active,
-.gender-form-toggle button:hover {
+.appearance-controls button.active,
+.appearance-controls button:hover {
   color: var(--hover-color);
   background: var(--hover-background);
+}
+
+.appearance-gender button:has(.gender-male).active {
+  background: #4aa3ff;
+}
+
+.appearance-gender button:has(.gender-female).active {
+  background: #f06fa9;
+}
+
+.appearance-gender button:has(.gender-male):hover {
+  background: #2f6fa8;
+}
+
+.appearance-gender button:has(.gender-female):hover {
+  background: #9f4d72;
+}
+
+.appearance-gender button.active .gender-male,
+.appearance-gender button:hover .gender-male,
+.appearance-gender button.active .gender-female,
+.appearance-gender button:hover .gender-female {
+  color: white;
 }
 
 .detail-heading h2 {

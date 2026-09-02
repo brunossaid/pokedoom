@@ -20,8 +20,8 @@ function isValidFavorite(favorite) {
     typeof favorite.image === 'string' &&
     favorite.image.length > 0 &&
     typeof favorite.isShiny === 'boolean' &&
-    Number.isInteger(favorite.priority) &&
-    favorite.priority > 0 &&
+    Number.isInteger(favorite.rating) &&
+    favorite.rating > 0 &&
     typeof favorite.tag === 'string' &&
     favorite.tag.trim().length > 0 &&
     typeof favorite.note === 'string' &&
@@ -39,10 +39,7 @@ export function saveFavorites(favorites) {
 }
 
 export function upsertFavorite(favorites, favorite) {
-  return [
-    ...favorites.filter((item) => item.id !== favorite.id),
-    favorite,
-  ];
+  return [...favorites.filter((item) => item.id !== favorite.id), favorite];
 }
 
 export function removeFavoriteById(favorites, favoriteId) {

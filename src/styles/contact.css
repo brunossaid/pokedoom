@@ -1,7 +1,7 @@
 .contact-page {
   width: min(1120px, 100%);
   margin: 0 auto;
-  padding: 28px 8px 110px;
+  padding: 28px 8px 40px;
 }
 
 .contact-heading {
@@ -172,6 +172,7 @@
 
 .developer-details a:hover {
   color: #d8324f;
+  transform: translateY(-2px);
 }
 
 .contact-location-copy > span {
@@ -207,4 +208,5 @@
 
 .contact-location > a:hover {
   color: #d8324f;
+  transform: translateY(-2px);
 }

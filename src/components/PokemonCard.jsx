@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { getPokemonDetails } from '../api/pokeApi';
-import { capitalize } from '../utils/textUtils';
+import { capitalize, formatPokemonName } from '../utils/textUtils';
 import { handleImageError } from '../utils/imageFallback';
 import { ErrorState, LoadingState } from './AsyncState';
 
@@ -41,7 +41,7 @@ function PokemonCard({ pokemon, returnTo = '/pokedex' }) {
       {error ? (
         <ErrorState
           className="pokemon-card-status"
-          message={`Unable to load ${capitalize(pokemon.name)}.`}
+          message={`Unable to load ${formatPokemonName(pokemon.name)}.`}
           onRetry={() => setRetryCount((currentCount) => currentCount + 1)}
         />
       ) : pokemonDetails ? (
@@ -65,7 +65,7 @@ function PokemonCard({ pokemon, returnTo = '/pokedex' }) {
 
           <span className="pokemon-number">#{pokemonDetails.id}</span>
 
-          <h3 className="pokemon-name">{capitalize(pokemonDetails.name)}</h3>
+          <h3 className="pokemon-name">{formatPokemonName(pokemon.name)}</h3>
         </Link>
       ) : (
         <LoadingState

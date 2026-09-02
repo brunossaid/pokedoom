@@ -15,7 +15,7 @@ function Header() {
   };
 
   const title = location.pathname.startsWith('/pokemon/')
-    ? 'Pokémon Details'
+    ? 'Details'
     : titles[location.pathname] || 'PokeDoom';
 
   return (

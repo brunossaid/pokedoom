@@ -78,7 +78,7 @@
 .confirm-modal-actions button:hover,
 .confirm-modal-actions button:focus-visible {
   transform: translateY(-2px);
-  outline: 3px solid #ffd469;
+
   outline-offset: 2px;
 }
 
@@ -172,7 +172,6 @@
 .favorite-form input:focus-visible,
 .favorite-form textarea:focus-visible,
 .favorite-modal button:focus-visible {
-  outline: 3px solid #ffd469;
   outline-offset: 2px;
 }
 
