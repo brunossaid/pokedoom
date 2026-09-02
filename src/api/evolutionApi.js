@@ -324,17 +324,24 @@ export async function getPokemonEvolutionFamily(
   const evolutionData = await evolutionResponse.json();
   const currentEvolutionDetails =
     findEvolutionDetails(evolutionData.chain, speciesName) || [];
+  const evolutionDetailRegions = currentEvolutionDetails.map(
+    (detail) =>
+      detail.region?.name ||
+      REGIONAL_FORM_NAMES.find((region) =>
+        detail.base_form?.name.includes(`-${region}`)
+      ) ||
+      null
+  );
+  const uniqueEvolutionRegions = [
+    ...new Set(evolutionDetailRegions.filter(Boolean)),
+  ];
+  const hasOnlyRegionalEvolutionDetails =
+    evolutionDetailRegions.length > 0 &&
+    evolutionDetailRegions.every(Boolean) &&
+    uniqueEvolutionRegions.length === 1;
   const inferredRegion =
     formContext.region ||
-    currentEvolutionDetails
-      .map(
-        (detail) =>
-          detail.region?.name ||
-          REGIONAL_FORM_NAMES.find((region) =>
-            detail.base_form?.name.includes(`-${region}`)
-          )
-      )
-      .find(Boolean);
+    (hasOnlyRegionalEvolutionDetails ? uniqueEvolutionRegions[0] : null);
   const rootSpeciesName = evolutionData.chain.species.name;
   const rootSpeciesData =
     rootSpeciesName === speciesName
@@ -362,6 +369,11 @@ export async function getPokemonEvolutionFamily(
       .flat()
       .filter(
         (form) => !getEvolutionPokemonNames(chainNodes).includes(form.name)
+      )
+      .filter(
+        (form) =>
+          !chainFormContext.region ||
+          form.name.includes(`-${chainFormContext.region}`)
       ),
   };
 }

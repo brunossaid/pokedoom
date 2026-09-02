@@ -11,9 +11,11 @@ function PokemonDetailHero({
   setAppearance,
   selectedForm,
   image,
+  fallbackImage,
   femaleImage,
   shinyImage,
   shinyFemaleImage,
+  hasBothGenders,
   isShiny,
   genus,
   description,
@@ -25,6 +27,17 @@ function PokemonDetailHero({
   onCloseForm,
   onSave,
 }) {
+  function handleAppearanceImageError(event) {
+    const imageElement = event.currentTarget;
+
+    if (fallbackImage && imageElement.src !== fallbackImage) {
+      imageElement.src = fallbackImage;
+      return;
+    }
+
+    handleImageError(event);
+  }
+
   return (
     <>
       <section className="detail-hero" aria-labelledby="pokemon-detail-name">
@@ -34,7 +47,7 @@ function PokemonDetailHero({
             <img
               src={image}
               alt={`${pokemon.name}${isShiny ? ' shiny' : ''}`}
-              onError={handleImageError}
+              onError={handleAppearanceImageError}
             />
           </div>
           <div
@@ -114,7 +127,7 @@ function PokemonDetailHero({
                   </div>
                 )}
 
-                {femaleImage && (
+                {femaleImage && hasBothGenders && (
                   <div className="appearance-group appearance-gender">
                     <button
                       type="button"

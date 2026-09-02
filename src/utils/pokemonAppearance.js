@@ -44,8 +44,14 @@ export function getPokemonAppearance(pokemon, forms, selectedAppearance) {
     ? selectedAppearance.slice(5).replace(/:shiny$/, '')
     : null;
   const selectedForm = forms.find(({ name }) => name === formName);
+  const fallbackImage = selectedForm
+    ? isShiny
+      ? selectedForm.fallbackShinyImage
+      : selectedForm.fallbackImage
+    : null;
   return {
     image,
+    fallbackImage,
     femaleImage,
     shinyImage,
     shinyFemaleImage,

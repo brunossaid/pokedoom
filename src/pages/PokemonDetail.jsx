@@ -65,7 +65,7 @@ function PokemonDetail() {
   }
 
   const {
-    image, femaleImage, shinyImage, shinyFemaleImage, isShiny,
+    image, fallbackImage, femaleImage, shinyImage, shinyFemaleImage, isShiny,
     selectedForm, favoriteName, favoriteId,
   } = getPokemonAppearance(pokemon, forms, selectedAppearance);
   const existingFavorite = favorites.find(
@@ -114,6 +114,7 @@ function PokemonDetail() {
   const isGenderless = species.gender_rate === -1;
   const femalePercentage = isGenderless ? 0 : (species.gender_rate / 8) * 100;
   const malePercentage = 100 - femalePercentage;
+  const hasBothGenders = malePercentage > 0 && femalePercentage > 0;
 
   return (
     <article className="pokemon-detail">
@@ -123,7 +124,9 @@ function PokemonDetail() {
 
       <PokemonDetailHero pokemon={pokemon} forms={forms} appearance={selectedAppearance}
         setAppearance={setSelectedAppearance} selectedForm={selectedForm} image={image}
+        fallbackImage={fallbackImage}
         femaleImage={femaleImage} shinyImage={shinyImage} shinyFemaleImage={shinyFemaleImage}
+        hasBothGenders={hasBothGenders}
         isShiny={isShiny} genus={genus} description={description} existingFavorite={existingFavorite}
         confirmation={favoriteConfirmation} error={favoriteError} showForm={showFavoriteForm}
         onOpenForm={() => { setFavoriteError(''); setFavoriteConfirmation(''); setShowFavoriteForm(true); }}
