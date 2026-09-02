@@ -6,9 +6,11 @@ export function getPokemonAppearance(pokemon, forms, selectedAppearance) {
     '/images/image-fallback.png';
 
   const femaleImage =
-    pokemon.sprites.other?.showdown?.front_female ||
-    pokemon.sprites.other?.home?.front_female ||
-    pokemon.sprites.front_female;
+    pokemon.name === 'eevee'
+      ? null
+      : pokemon.sprites.other?.showdown?.front_female ||
+        pokemon.sprites.other?.home?.front_female ||
+        pokemon.sprites.front_female;
 
   const shinyImage =
     pokemon.sprites.other?.showdown?.front_shiny ||

@@ -108,6 +108,12 @@
   cursor: pointer;
 }
 
+.favorite-modal-close:hover {
+  background: #d8324f;
+  border-color: #8d1930;
+  transform: translateY(-2px);
+}
+
 .favorite-modal-heading {
   display: flex;
   align-items: flex-start;
@@ -165,6 +171,46 @@
   box-sizing: border-box;
 }
 
+.favorite-rating-control {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  gap: 8px;
+}
+
+.favorite-rating-control input {
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+
+.favorite-rating-control input::-webkit-inner-spin-button,
+.favorite-rating-control input::-webkit-outer-spin-button {
+  margin: 0;
+  -webkit-appearance: none;
+}
+
+.favorite-rating-control button {
+  min-width: 44px;
+  padding: 11px;
+  color: var(--text-color);
+  background: var(--app-background);
+  border: 2px solid var(--border-color);
+  border-radius: 0;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.favorite-rating-control button:hover:not(:disabled) {
+  color: var(--hover-color);
+  background: var(--hover-background);
+  transform: translateY(-2px);
+}
+
+.favorite-rating-control button:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
 .favorite-form textarea {
   resize: vertical;
 }
@@ -213,6 +259,10 @@
   font: inherit;
   font-weight: 700;
   cursor: pointer;
+}
+
+.favorite-form-actions button:hover {
+  transform: translateY(-2px);
 }
 
 .favorite-form-actions button[type='submit'] {

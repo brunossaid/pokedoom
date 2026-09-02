@@ -1,22 +1,64 @@
 .hero {
   height: 80px;
-
   display: flex;
   align-items: center;
   justify-content: center;
-
-  position: relative;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  gap: 50px;
+  background: var(--app-background);
   border-bottom: 2px solid var(--border-color);
+
+  transition:
+    height 0.25s ease,
+    box-shadow 0.25s ease;
 }
 
 .hero.no-border {
   border-bottom: none;
 }
 
+.hero-arrow {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  color: var(--text-color);
+  background: transparent;
+  font: inherit;
+  font-size: 1.8rem;
+  text-decoration: none;
+  cursor: pointer;
+}
+.hero-arrow:not(:disabled):hover {
+  transform: translateY(-2px);
+}
+
+.hero-arrow:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
 .hero h1 {
   margin: 0;
   font-family: 'Press Start 2P';
   font-size: 1.7rem;
+
+  transition: font-size 0.25s ease;
+}
+
+.hero.scrolled {
+  height: 58px;
+  box-shadow: 0 4px 0 rgba(0, 0, 0, 0.25);
+}
+
+.hero.scrolled h1 {
+  font-size: 1.25rem;
+}
+
+.hero.scrolled .hero-arrow {
+  font-size: 1.5rem;
 }
 
 .hero-link {
@@ -124,4 +166,3 @@ main {
   color: var(--hover-color);
   background: var(--hover-background);
 }
-

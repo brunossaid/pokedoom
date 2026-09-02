@@ -409,6 +409,9 @@
 }
 
 .evolution-branches {
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: center;
   width: max-content;
   min-width: 100%;
   gap: 20px;
@@ -433,13 +436,28 @@
   align-items: center;
   justify-content: center;
   gap: 6px;
+  min-height: 28px;
   color: #888;
   font-size: 0.95rem;
+  text-align: center;
 }
 
 .evolution-options {
   display: grid;
   gap: 6px;
+}
+
+.evolution-expand-button {
+  padding: 0 4px;
+  border: none;
+  color: var(--text-color);
+  background: transparent;
+  font: inherit;
+  cursor: pointer;
+}
+
+.evolution-expand-button:hover {
+  transform: translateY(1px);
 }
 
 .evolution-condition small + small::before {
@@ -600,12 +618,6 @@
 
   .effectiveness-grid {
     grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-
-  .evolution-branches {
-    flex-direction: row;
-    align-items: flex-start;
-    justify-content: center;
   }
 }
 

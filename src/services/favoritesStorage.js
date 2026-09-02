@@ -22,6 +22,7 @@ function isValidFavorite(favorite) {
     typeof favorite.isShiny === 'boolean' &&
     Number.isInteger(favorite.rating) &&
     favorite.rating > 0 &&
+    favorite.rating <= 10 &&
     typeof favorite.tag === 'string' &&
     favorite.tag.trim().length > 0 &&
     typeof favorite.note === 'string' &&

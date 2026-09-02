@@ -43,6 +43,7 @@
   background: #d8324f;
   border-color: #8d1930;
   box-shadow: 4px 4px 0 #611121;
+  transform: translateY(-2px);
 }
 
 .history-list {

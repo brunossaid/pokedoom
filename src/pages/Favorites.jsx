@@ -25,7 +25,7 @@ function Favorites() {
     (first, second) =>
       first.rating - second.rating || first.name.localeCompare(second.name)
   );
-  const priorities = [
+  const ratings = [
     ...new Set(favorites.map((favorite) => favorite.rating)),
   ].sort((first, second) => first - second);
   const normalizedSearch = search.trim().toLowerCase();
@@ -157,14 +157,13 @@ function Favorites() {
               className={`filters-menu ${showFilters ? 'open' : ''}`}
             >
               <select
-                aria-label="Filter favorites by rating"
                 value={ratingDraft}
                 onChange={(event) => setRatingDraft(event.target.value)}
               >
-                <option value="">All priorities</option>
-                {priorities.map((rating) => (
+                <option value="">All ratings</option>
+                {ratings.map((rating) => (
                   <option value={rating} key={rating}>
-                    P{rating}
+                    Rating = {rating}
                   </option>
                 ))}
               </select>
@@ -213,9 +212,7 @@ function Favorites() {
                         <small>#{favorite.pokemonId}</small>
                         <h3>{capitalize(favorite.name)}</h3>
                       </div>
-                      <strong aria-label={`Rating ${favorite.rating}`}>
-                        P{favorite.rating}
-                      </strong>
+                      <strong>{favorite.rating}</strong>
                     </div>
 
                     <span className="favorite-custom-tag">{favorite.tag}</span>

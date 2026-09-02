@@ -19,13 +19,30 @@ function FavoriteModal({
   const modalRef = useRef(null);
   useModalAccessibility(modalRef, tagInputRef, onClose);
 
+  function adjustRating(amount) {
+    setRating((currentRating) => {
+      const numericRating = Number(currentRating);
+      const startingRating = Number.isInteger(numericRating)
+        ? numericRating
+        : amount > 0
+          ? 0
+          : 2;
+
+      return Math.min(10, Math.max(1, startingRating + amount));
+    });
+  }
+
   function handleSubmit(event) {
     event.preventDefault();
     const nextErrors = {};
     const numericRating = Number(rating);
 
-    if (!Number.isInteger(numericRating) || numericRating <= 0) {
-      nextErrors.rating = 'Rating must be a whole number greater than 0.';
+    if (
+      !Number.isInteger(numericRating) ||
+      numericRating < 1 ||
+      numericRating > 10
+    ) {
+      nextErrors.rating = 'Rating must be a whole number from 1 to 10.';
     }
     if (!tag.trim()) nextErrors.tag = 'Please enter a custom tag.';
     if (note.length > 200)
@@ -79,19 +96,36 @@ function FavoriteModal({
 
         <form className="favorite-form" onSubmit={handleSubmit} noValidate>
           <label htmlFor="favorite-rating">Rating *</label>
-          <input
-            id="favorite-rating"
-            type="number"
-            min="1"
-            step="1"
-            value={rating}
-            onChange={(event) => setRating(event.target.value)}
-            aria-describedby={`rating-help${errors.rating ? ' rating-error' : ''}`}
-            aria-invalid={Boolean(errors.rating)}
-            required
-          />
+          <div className="favorite-rating-control">
+            <input
+              id="favorite-rating"
+              type="number"
+              min="1"
+              max="10"
+              step="1"
+              value={rating}
+              onChange={(event) => setRating(event.target.value)}
+              aria-describedby={`rating-help${errors.rating ? ' rating-error' : ''}`}
+              aria-invalid={Boolean(errors.rating)}
+              required
+            />
+            <button
+              type="button"
+              onClick={() => adjustRating(-1)}
+              disabled={Number(rating) <= 1}
+            >
+              −
+            </button>
+            <button
+              type="button"
+              onClick={() => adjustRating(1)}
+              disabled={Number(rating) >= 10}
+            >
+              +
+            </button>
+          </div>
           <small className="field-help" id="rating-help">
-            1 = highest rating. Higher numbers appear later in your favorites.
+            Choose from 1 to 10. Lower numbers appear first in your favorites.
           </small>
           {errors.rating && (
             <p className="field-error" id="rating-error">
