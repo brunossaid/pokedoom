@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { getAllPokemon } from '../api/pokeApi';
+import { getAllPokemon, preloadPokemonDetails } from '../api/pokeApi';
 import { useFavorites } from '../hooks/useFavorites';
 
 function Header() {
@@ -81,6 +81,14 @@ function Header() {
   const navigationIsLoading =
     needsFullPokemonList && pokemonNames.length === 0 && !pokemonListFailed;
   const navigationState = { ...location.state, returnTo };
+
+  useEffect(() => {
+    const neighbors = [previousPokemonName, nextPokemonName].filter(Boolean);
+
+    neighbors.forEach((pokemonName) => {
+      preloadPokemonDetails(pokemonName).catch(() => {});
+    });
+  }, [previousPokemonName, nextPokemonName]);
 
   const hideBorder =
     location.pathname === '/' || location.pathname === '/pokedex';

@@ -52,7 +52,7 @@ function PokemonDetail() {
     retryDefenses,
   } = usePokemonDetails(name);
 
-  if (loading) {
+  if (loading && !pokemon) {
     return <LoadingState label="Loading Pokémon details" />;
   }
 
@@ -117,7 +117,13 @@ function PokemonDetail() {
   const hasBothGenders = malePercentage > 0 && femalePercentage > 0;
 
   return (
-    <article className="pokemon-detail">
+    <article className="pokemon-detail" aria-busy={loading}>
+      {loading && (
+        <LoadingState
+          label="Loading next Pokémon"
+          className="detail-transition-loading"
+        />
+      )}
       <Link className="detail-back-link" to={returnTo}>
         ← {backLabel}
       </Link>

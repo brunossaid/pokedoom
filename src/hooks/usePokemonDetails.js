@@ -45,6 +45,11 @@ export function usePokemonDetails(name) {
           setPokemon(data);
           setSpecies(speciesData);
           setForms(formData);
+          setEvolutionChain(null);
+          setSpecialForms([]);
+          setEvolutionLoading(true);
+          setDefenses([]);
+          setDefensesLoading(true);
           setSelectedAppearance(
             formData.length > 1 ? `form:${formData[0].name}` : 'default'
           );
