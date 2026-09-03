@@ -30,8 +30,6 @@ export function useRandomPokemon() {
         }
       } catch {
         if (!cancelled) {
-          setPokemon(null);
-          setSpecies(null);
           setError('Unable to discover a Pokémon. Please check your connection and try again.');
         }
       } finally {
