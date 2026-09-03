@@ -17,6 +17,8 @@ function Favorites() {
   const [searchDraft, setSearchDraft] = useState('');
   const [selectedRating, setSelectedRating] = useState('');
   const [ratingDraft, setRatingDraft] = useState('');
+  const [selectedTeam, setSelectedTeam] = useState('');
+  const [teamDraft, setTeamDraft] = useState('');
   const [showFilters, setShowFilters] = useState(false);
   const [page, setPage] = useState(1);
   const [favoriteToRemove, setFavoriteToRemove] = useState(null);
@@ -27,6 +29,11 @@ function Favorites() {
   );
   const ratings = [...new Set(favorites.map((favorite) => favorite.rating))]
     .sort((first, second) => first - second);
+  const teams = [
+    ...new Map(
+      favorites.map((favorite) => [favorite.tag.toLowerCase(), favorite.tag])
+    ).values(),
+  ].sort((first, second) => first.localeCompare(second));
   const normalizedSearch = search.trim().toLowerCase();
   const visibleFavorites = sortedFavorites.filter((favorite) => {
     const matchesSearch =
@@ -35,7 +42,9 @@ function Favorites() {
       favorite.tag.toLowerCase().includes(normalizedSearch);
     const matchesRating =
       !selectedRating || favorite.rating === Number(selectedRating);
-    return matchesSearch && matchesRating;
+    const matchesTeam =
+      !selectedTeam || favorite.tag.toLowerCase() === selectedTeam.toLowerCase();
+    return matchesSearch && matchesRating && matchesTeam;
   });
   const totalPages = Math.max(1, Math.ceil(visibleFavorites.length / FAVORITES_PER_PAGE));
   const currentPage = Math.min(page, totalPages);
@@ -73,6 +82,7 @@ function Favorites() {
     event.preventDefault();
     setSearch(searchDraft);
     setSelectedRating(ratingDraft);
+    setSelectedTeam(teamDraft);
     setPage(1);
   }
 
@@ -81,6 +91,8 @@ function Favorites() {
     setSearchDraft('');
     setSelectedRating('');
     setRatingDraft('');
+    setSelectedTeam('');
+    setTeamDraft('');
     setPage(1);
   }
 
@@ -98,13 +110,17 @@ function Favorites() {
           <FavoritesFilters
             search={search}
             selectedRating={selectedRating}
+            selectedTeam={selectedTeam}
             searchDraft={searchDraft}
             ratingDraft={ratingDraft}
+            teamDraft={teamDraft}
             ratings={ratings}
+            teams={teams}
             showFilters={showFilters}
             resultCount={visibleFavorites.length}
             onSearchDraftChange={setSearchDraft}
             onRatingDraftChange={setRatingDraft}
+            onTeamDraftChange={setTeamDraft}
             onToggleFilters={() => setShowFilters(!showFilters)}
             onSubmit={submitSearch}
             onClear={clearFilters}
