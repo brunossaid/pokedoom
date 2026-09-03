@@ -20,7 +20,16 @@ function FavoriteCard({ favorite, onEdit, onRemove }) {
         </small>
         {favorite.note && <p>{favorite.note}</p>}
         <div className="favorite-card-actions">
-          <Link to={`/pokemon/${favorite.pokemonName || favorite.name}`} state={{ returnTo: '/favorites' }}>View details</Link>
+          <Link
+            to={`/pokemon/${favorite.pokemonName || favorite.name}`}
+            state={{
+              returnTo: '/favorites',
+              initialAppearance: favorite.appearance,
+              appearancePokemon: favorite.pokemonName || favorite.name,
+            }}
+          >
+            View details
+          </Link>
           <button type="button" onClick={() => onEdit(favorite)}>Edit</button>
           <button type="button" className="remove-favorite" onClick={() => onRemove(favorite)}>Remove</button>
         </div>

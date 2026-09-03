@@ -21,6 +21,10 @@ function PokemonDetail() {
   const { name } = useParams();
   const location = useLocation();
   const returnTo = location.state?.returnTo || '/pokedex';
+  const initialAppearance =
+    location.state?.appearancePokemon === name
+      ? location.state.initialAppearance
+      : undefined;
   const backLabel = returnTo === '/'
     ? 'Back to Home'
     : returnTo === '/history'
@@ -50,7 +54,7 @@ function PokemonDetail() {
     defensesLoading,
     defensesError,
     retryDefenses,
-  } = usePokemonDetails(name);
+  } = usePokemonDetails(name, initialAppearance);
 
   if (loading && !pokemon) {
     return <LoadingState label="Loading Pokémon details" />;

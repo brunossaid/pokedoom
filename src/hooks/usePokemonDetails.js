@@ -8,7 +8,7 @@ import {
 } from '../api/pokeApi';
 import { useHistory } from './useHistory';
 
-export function usePokemonDetails(name) {
+export function usePokemonDetails(name, initialAppearance) {
   const { recordView } = useHistory();
   const [pokemon, setPokemon] = useState(null);
   const [species, setSpecies] = useState(null);
@@ -51,7 +51,8 @@ export function usePokemonDetails(name) {
           setDefenses([]);
           setDefensesLoading(true);
           setSelectedAppearance(
-            formData.length > 1 ? `form:${formData[0].name}` : 'default'
+            initialAppearance ||
+              (formData.length > 1 ? `form:${formData[0].name}` : 'default')
           );
           recordView(data);
         }
@@ -66,7 +67,7 @@ export function usePokemonDetails(name) {
 
     loadPokemon();
     return () => { cancelled = true; };
-  }, [name, retryCount, recordView]);
+  }, [name, initialAppearance, retryCount, recordView]);
 
   useEffect(() => {
     if (!pokemon?.species.name) return undefined;

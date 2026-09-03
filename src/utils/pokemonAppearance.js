@@ -41,7 +41,9 @@ export function getPokemonAppearance(pokemon, forms, selectedAppearance) {
       ...formImages,
     }[selectedAppearance] || defaultImage;
   const isShiny =
-    selectedAppearance === 'shiny' || selectedAppearance.endsWith(':shiny');
+    selectedAppearance === 'shiny' ||
+    selectedAppearance === 'shiny-female' ||
+    selectedAppearance.endsWith(':shiny');
   const formName = selectedAppearance.startsWith('form:')
     ? selectedAppearance.slice(5).replace(/:shiny$/, '')
     : null;
