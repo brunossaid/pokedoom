@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { getAllPokemon } from '../api/pokeApi';
+import { getAllPokemon, preloadPokemonDetails } from '../api/pokeApi';
 import { useFavorites } from '../hooks/useFavorites';
 
 function Header() {
@@ -18,7 +18,12 @@ function Header() {
 
   useEffect(() => {
     function handleScroll() {
-      setScrolled(window.scrollY > 30);
+      setScrolled((current) => {
+        if (window.scrollY > 40) return true;
+        if (window.scrollY <= 5) return false;
+
+        return current;
+      });
     }
 
     window.addEventListener('scroll', handleScroll);
@@ -54,7 +59,8 @@ function Header() {
       [...favorites]
         .sort(
           (first, second) =>
-            first.rating - second.rating || first.name.localeCompare(second.name)
+            first.rating - second.rating ||
+            first.name.localeCompare(second.name)
         )
         .map((favorite) => favorite.pokemonName || favorite.name)
     ),
@@ -75,6 +81,14 @@ function Header() {
   const navigationIsLoading =
     needsFullPokemonList && pokemonNames.length === 0 && !pokemonListFailed;
   const navigationState = { ...location.state, returnTo };
+
+  useEffect(() => {
+    const neighbors = [previousPokemonName, nextPokemonName].filter(Boolean);
+
+    neighbors.forEach((pokemonName) => {
+      preloadPokemonDetails(pokemonName).catch(() => {});
+    });
+  }, [previousPokemonName, nextPokemonName]);
 
   const hideBorder =
     location.pathname === '/' || location.pathname === '/pokedex';
@@ -97,8 +111,9 @@ function Header() {
         scrolled ? 'scrolled' : ''
       }`}
     >
-      {isPokemonDetail && !isHistoryDetail && (
-        previousPokemonName ? (
+      {isPokemonDetail &&
+        !isHistoryDetail &&
+        (previousPokemonName ? (
           <Link
             className="hero-arrow"
             to={`/pokemon/${previousPokemonName}`}
@@ -116,15 +131,15 @@ function Header() {
           >
             ‹
           </button>
-        )
-      )}
+        ))}
 
       <Link to="/" className="hero-link">
         <h1>{title}</h1>
       </Link>
 
-      {isPokemonDetail && !isHistoryDetail && (
-        nextPokemonName ? (
+      {isPokemonDetail &&
+        !isHistoryDetail &&
+        (nextPokemonName ? (
           <Link
             className="hero-arrow"
             to={`/pokemon/${nextPokemonName}`}
@@ -146,8 +161,7 @@ function Header() {
           >
             ›
           </button>
-        )
-      )}
+        ))}
     </header>
   );
 }

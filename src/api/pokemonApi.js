@@ -1,5 +1,20 @@
 import { fetchJson, POKE_API_BASE_URL } from './apiClient';
 
+const requestCache = new Map();
+
+function fetchCached(url, errorMessage) {
+  if (!requestCache.has(url)) {
+    const request = fetchJson(url, errorMessage).catch((error) => {
+      requestCache.delete(url);
+      throw error;
+    });
+
+    requestCache.set(url, request);
+  }
+
+  return requestCache.get(url);
+}
+
 function getAnimatedFormSprite(sprite, pokemonName, formName, shiny = false) {
   if (!sprite) return null;
 
@@ -27,13 +42,13 @@ export const getAllPokemon = () =>
   );
 
 export const getPokemonDetails = (name) =>
-  fetchJson(
+  fetchCached(
     `${POKE_API_BASE_URL}/pokemon/${encodeURIComponent(name)}`,
     'Failed to fetch Pokémon details'
   );
 
 export const getPokemonSpecies = (name) =>
-  fetchJson(
+  fetchCached(
     `${POKE_API_BASE_URL}/pokemon-species/${encodeURIComponent(name)}`,
     'Failed to fetch Pokémon species'
   );
@@ -42,7 +57,7 @@ export async function getPokemonForms(forms = []) {
   if (forms.length <= 1) return [];
   return Promise.all(
     forms.map(async ({ name, url }) => {
-      const form = await fetchJson(url, 'Failed to fetch Pokémon form');
+      const form = await fetchCached(url, 'Failed to fetch Pokémon form');
       const pokemonName = form.pokemon.name;
       const staticImage = form.sprites.front_default;
       const staticShinyImage = form.sprites.front_shiny;
@@ -59,4 +74,13 @@ export async function getPokemonForms(forms = []) {
       };
     })
   );
+}
+
+export async function preloadPokemonDetails(name) {
+  const pokemon = await getPokemonDetails(name);
+
+  await Promise.all([
+    getPokemonSpecies(pokemon.species.name),
+    getPokemonForms(pokemon.forms),
+  ]);
 }

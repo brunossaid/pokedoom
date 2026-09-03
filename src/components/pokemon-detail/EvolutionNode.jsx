@@ -25,8 +25,9 @@ function EvolutionNode({ node, currentPokemon, returnTo }) {
       {uniqueDetails.length > 0 && (
         <div className="evolution-condition">
           <span aria-hidden="true">↓</span>
-          <div className="evolution-options">
-            <small>
+          <ul className="evolution-options">
+            <li>
+              <small>
               {uniqueDetails[0].itemSprite && (
                 <img src={uniqueDetails[0].itemSprite} alt="" onError={handleImageError} />
               )}
@@ -42,15 +43,17 @@ function EvolutionNode({ node, currentPokemon, returnTo }) {
                   {showAllMethods ? '▴' : '▾'}
                 </button>
               )}
-            </small>
-            {showAllMethods && uniqueDetails.slice(1).map((detail, index) => (
-              <small key={`${formatEvolutionCondition(detail)}-${index}`}>
-                <strong>or</strong>
-                {detail.itemSprite && <img src={detail.itemSprite} alt="" onError={handleImageError} />}
-                {formatEvolutionCondition(detail)}
               </small>
+            </li>
+            {showAllMethods && uniqueDetails.slice(1).map((detail, index) => (
+              <li key={`${formatEvolutionCondition(detail)}-${index}`}>
+                <small>
+                  {detail.itemSprite && <img src={detail.itemSprite} alt="" onError={handleImageError} />}
+                  {formatEvolutionCondition(detail)}
+                </small>
+              </li>
             ))}
-          </div>
+          </ul>
         </div>
       )}
       <Link
