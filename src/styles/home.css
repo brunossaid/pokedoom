@@ -74,11 +74,69 @@
   margin-top: 28px;
 }
 
+.refresh-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+
+  width: 38px;
+  height: 38px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  border: 2px solid var(--border-color);
+  color: var(--text-color);
+  background-color: transparent;
+  box-shadow: 4px 4px 0 #77767c;
+
+  font: inherit;
+  font-size: 1.2rem;
+  cursor: pointer;
+
+  z-index: 1;
+
+  transition:
+    transform 0.2s ease,
+    color 0.2s ease,
+    background-color 0.2s ease;
+}
+
+.refresh-text {
+  display: none;
+}
+
+@media (min-width: 768px) {
+  .refresh-button {
+    width: auto;
+    padding: 0 14px;
+    gap: 8px;
+  }
+
+  .refresh-text {
+    display: inline;
+  }
+}
+
+.refresh-button:hover {
+  color: var(--hover-color);
+  background: var(--hover-background);
+  transform: translateY(-2px);
+}
+
+.refresh-button:active {
+  transform: translateY(1px);
+  box-shadow: 2px 2px 0 #77767c;
+}
+
 .home-featured h2 {
   margin: 10px 0 10px;
 }
 
 .daily-pokemon-card {
+  position: relative;
+
   display: flex;
   align-items: center;
 

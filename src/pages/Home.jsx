@@ -33,12 +33,22 @@ function Home() {
 
       <section className="home-featured">
         <h2>Discover a Pokémon</h2>
+
         {featuredLoading ? (
           <LoadingState label="Discovering a Pokémon" />
         ) : featuredError ? (
           <ErrorState message={featuredError} onRetry={retryFeatured} />
         ) : randomPokemon && randomSpecies ? (
           <div className="daily-pokemon-card">
+            <button
+              type="button"
+              className="refresh-button"
+              onClick={retryFeatured}
+            >
+              <span className="refresh-icon">↻</span>
+              <span className="refresh-text">View another</span>
+            </button>
+
             <img
               className="daily-pokemon-image"
               width="140"
