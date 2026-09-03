@@ -30,7 +30,12 @@ function PokemonEvolutions({ chain, specialForms, currentPokemon, returnTo, load
               <h4>Special forms</h4>
               <div className="special-forms-grid">
                 {specialForms.map((form) => (
-                  <Link className="special-form-card" to={`/pokemon/${form.name}`} state={{ returnTo }} key={form.name}>
+                  <Link
+                    className="special-form-card"
+                    to={`/pokemon/${form.name}`}
+                    state={{ returnTo, scrollToTopFor: form.name }}
+                    key={form.name}
+                  >
                     <small>{form.category}</small>
                     <img src={form.image} alt="" onError={handleImageError} />
                     <strong>{formatDisplayName(form.name)}</strong>

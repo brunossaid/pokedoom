@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link, useLocation, useParams } from 'react-router-dom';
 import { capitalize } from '../utils/textUtils';
 import PokemonDetailHero from '../components/pokemon-detail/PokemonDetailHero';
@@ -55,6 +55,25 @@ function PokemonDetail() {
     defensesError,
     retryDefenses,
   } = usePokemonDetails(name, initialAppearance);
+
+  useEffect(() => {
+    if (
+      loading ||
+      pokemon?.name !== name ||
+      location.state?.scrollToTopFor !== name
+    ) {
+      return;
+    }
+
+    const frameId = window.requestAnimationFrame(() => {
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth',
+      });
+    });
+
+    return () => window.cancelAnimationFrame(frameId);
+  }, [loading, location.key, location.state?.scrollToTopFor, name, pokemon?.name]);
 
   if (loading && !pokemon) {
     return <LoadingState label="Loading Pokémon details" />;

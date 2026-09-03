@@ -59,7 +59,7 @@ function EvolutionNode({ node, currentPokemon, returnTo }) {
       <Link
         className={`evolution-pokemon ${node.name === currentPokemon ? 'current' : ''}`}
         to={`/pokemon/${node.name}`}
-        state={{ returnTo }}
+        state={{ returnTo, scrollToTopFor: node.name }}
         aria-current={node.name === currentPokemon ? 'page' : undefined}
       >
         <img src={node.image} alt="" onError={handleImageError} />
