@@ -462,16 +462,21 @@
   display: grid;
   gap: 6px;
   margin: 0;
-  padding-left: 40px;
+  padding-left: 0;
   list-style-type: square;
   text-align: left;
 }
 
 .evolution-options li {
+  margin-left: 40px;
   padding-left: 2px;
 }
 
 .evolution-options li:first-child {
+  display: flex;
+  justify-content: center;
+  margin-left: 0;
+  padding-left: 0;
   list-style: none;
 }
 
