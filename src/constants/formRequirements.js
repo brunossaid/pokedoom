@@ -17,22 +17,10 @@ export const FORM_REQUIREMENT_FALLBACKS = {
   'rotom-frost': [itemRequirement('rotom-catalog')],
   'rotom-fan': [itemRequirement('rotom-catalog')],
   'rotom-mow': [itemRequirement('rotom-catalog')],
-  'kyurem-black': [
-    itemRequirement('dna-splicers--merge', 'Use DNA Splicers with Zekrom'),
-  ],
-  'kyurem-white': [
-    itemRequirement('dna-splicers--merge', 'Use DNA Splicers with Reshiram'),
-  ],
-  'necrozma-dusk': [
-    itemRequirement('n-solarizer--merge', 'Use N-Solarizer with Solgaleo'),
-  ],
-  'necrozma-dawn': [
-    itemRequirement('n-lunarizer--merge', 'Use N-Lunarizer with Lunala'),
-  ],
-  'calyrex-ice': [
-    itemRequirement('reins-of-unity--merge', 'Use Reins of Unity with Glastrier'),
-  ],
-  'calyrex-shadow': [
-    itemRequirement('reins-of-unity--merge', 'Use Reins of Unity with Spectrier'),
-  ],
+  'kyurem-black': [itemRequirement('dna-splicers--merge', 'Use DNA Splicers with Zekrom'),],
+  'kyurem-white': [itemRequirement('dna-splicers--merge', 'Use DNA Splicers with Reshiram'),],
+  'necrozma-dusk': [itemRequirement('n-solarizer--merge', 'Use N-Solarizer with Solgaleo'),],
+  'necrozma-dawn': [itemRequirement('n-lunarizer--merge', 'Use N-Lunarizer with Lunala'),],
+  'calyrex-ice': [itemRequirement('reins-of-unity--merge', 'Use Reins of Unity with Glastrier'),],
+  'calyrex-shadow': [itemRequirement('reins-of-unity--merge', 'Use Reins of Unity with Spectrier'),],
 };

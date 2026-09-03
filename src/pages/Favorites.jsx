@@ -1,11 +1,12 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
 import FavoriteModal from '../components/FavoriteModal';
 import ConfirmModal from '../components/ConfirmModal';
 import Pagination from '../components/Pagination';
+import FavoriteCard from '../components/favorites/FavoriteCard';
+import FavoritesFilters from '../components/favorites/FavoritesFilters';
+import { NoFavoriteResults, NoFavorites } from '../components/favorites/FavoritesEmptyState';
 import { capitalize } from '../utils/textUtils';
 import { useFavorites } from '../hooks/useFavorites';
-import { handleImageError } from '../utils/imageFallback';
 
 const FAVORITES_PER_PAGE = 6;
 
@@ -22,12 +23,10 @@ function Favorites() {
   const [storageError, setStorageError] = useState('');
 
   const sortedFavorites = [...favorites].sort(
-    (first, second) =>
-      first.rating - second.rating || first.name.localeCompare(second.name)
+    (first, second) => first.rating - second.rating || first.name.localeCompare(second.name)
   );
-  const ratings = [
-    ...new Set(favorites.map((favorite) => favorite.rating)),
-  ].sort((first, second) => first - second);
+  const ratings = [...new Set(favorites.map((favorite) => favorite.rating))]
+    .sort((first, second) => first - second);
   const normalizedSearch = search.trim().toLowerCase();
   const visibleFavorites = sortedFavorites.filter((favorite) => {
     const matchesSearch =
@@ -36,13 +35,9 @@ function Favorites() {
       favorite.tag.toLowerCase().includes(normalizedSearch);
     const matchesRating =
       !selectedRating || favorite.rating === Number(selectedRating);
-
     return matchesSearch && matchesRating;
   });
-  const totalPages = Math.max(
-    1,
-    Math.ceil(visibleFavorites.length / FAVORITES_PER_PAGE)
-  );
+  const totalPages = Math.max(1, Math.ceil(visibleFavorites.length / FAVORITES_PER_PAGE));
   const currentPage = Math.min(page, totalPages);
   const favoritesToShow = visibleFavorites.slice(
     (currentPage - 1) * FAVORITES_PER_PAGE,
@@ -55,29 +50,21 @@ function Favorites() {
       ...formValues,
       savedAt: new Date().toISOString(),
     });
-
     if (!saved) {
-      setStorageError(
-        'Unable to update this favorite. Check your browser storage and try again.'
-      );
+      setStorageError('Unable to update this favorite. Check your browser storage and try again.');
       return;
     }
-
     setStorageError('');
     setEditingFavorite(null);
   }
 
   function confirmFavoriteRemoval() {
     const removed = removeFavorite(favoriteToRemove.id);
-
     if (!removed) {
-      setStorageError(
-        'Unable to remove this favorite. Check your browser storage and try again.'
-      );
+      setStorageError('Unable to remove this favorite. Check your browser storage and try again.');
       setFavoriteToRemove(null);
       return;
     }
-
     setStorageError('');
     setFavoriteToRemove(null);
   }
@@ -100,162 +87,44 @@ function Favorites() {
   return (
     <section className="favorites-page" aria-labelledby="favorites-title">
       <header className="favorites-heading">
-        <div>
-          <span aria-hidden="true">♥</span>
-          <h2 id="favorites-title">Your favorites</h2>
-        </div>
+        <div><span aria-hidden="true">♥</span><h2 id="favorites-title">Your favorites</h2></div>
         <p>Ordered from highest to lowest rating.</p>
       </header>
 
-      {storageError && (
-        <div className="error-state" role="alert">
-          <p>{storageError}</p>
-        </div>
-      )}
+      {storageError && <div className="error-state" role="alert"><p>{storageError}</p></div>}
 
-      {sortedFavorites.length === 0 ? (
-        <div className="favorites-empty">
-          <span aria-hidden="true">♡</span>
-          <h3>No favorites yet</h3>
-          <p>Explore the Pokédex and save the Pokémon you like most.</p>
-          <Link to="/pokedex">Explore Pokédex</Link>
-        </div>
-      ) : (
+      {sortedFavorites.length === 0 ? <NoFavorites /> : (
         <>
-          <form
-            className="search-area favorites-search-area"
+          <FavoritesFilters
+            search={search}
+            selectedRating={selectedRating}
+            searchDraft={searchDraft}
+            ratingDraft={ratingDraft}
+            ratings={ratings}
+            showFilters={showFilters}
+            resultCount={visibleFavorites.length}
+            onSearchDraftChange={setSearchDraft}
+            onRatingDraftChange={setRatingDraft}
+            onToggleFilters={() => setShowFilters(!showFilters)}
             onSubmit={submitSearch}
-          >
-            <div className="search-row">
-              <input
-                type="search"
-                className="search-bar"
-                placeholder="Search Pokémon or custom tag..."
-                aria-label="Search favorites by Pokémon name or custom tag"
-                value={searchDraft}
-                onChange={(event) => setSearchDraft(event.target.value)}
-              />
+            onClear={clearFilters}
+          />
 
-              <button type="submit" className="search-submit-button">
-                Search
-              </button>
-
-              <button
-                type="button"
-                className="filter-button"
-                onClick={() => setShowFilters(!showFilters)}
-                aria-label={showFilters ? 'Hide filters' : 'Show filters'}
-                aria-expanded={showFilters}
-                aria-controls="favorite-filters"
-              >
-                {showFilters ? '▴' : '▾'}
-              </button>
-            </div>
-
-            <div
-              id="favorite-filters"
-              className={`filters-menu ${showFilters ? 'open' : ''}`}
-            >
-              <select
-                value={ratingDraft}
-                onChange={(event) => setRatingDraft(event.target.value)}
-              >
-                <option value="">All ratings</option>
-                {ratings.map((rating) => (
-                  <option value={rating} key={rating}>
-                    Rating = {rating}
-                  </option>
-                ))}
-              </select>
-            </div>
-          </form>
-
-          <div className="results-summary" aria-live="polite">
-            <strong>
-              {visibleFavorites.length} favorite
-              {visibleFavorites.length === 1 ? '' : 's'} found
-            </strong>
-            {(search || selectedRating) && (
-              <div className="applied-filters" aria-label="Applied filters">
-                {search && <span>Search: {search}</span>}
-                {selectedRating && <span>Rating: P{selectedRating}</span>}
-                <button type="button" onClick={clearFilters}>
-                  Clear filters
-                </button>
-              </div>
-            )}
-          </div>
-
-          {visibleFavorites.length === 0 ? (
-            <div className="favorites-no-results" role="status">
-              <p>No favorites match your search or rating filter.</p>
-              <button type="button" onClick={clearFilters}>
-                Clear search and filters
-              </button>
-            </div>
-          ) : (
+          {visibleFavorites.length === 0 ? <NoFavoriteResults onClear={clearFilters} /> : (
             <div className="favorites-grid">
               {favoritesToShow.map((favorite) => (
-                <article className="favorite-card" key={favorite.id}>
-                  <div className="favorite-card-image">
-                    {favorite.isShiny && <span>✦ SHINY</span>}
-                    <img
-                      src={favorite.image}
-                      alt={`${favorite.name} ${favorite.appearance}`}
-                      onError={handleImageError}
-                    />
-                  </div>
-
-                  <div className="favorite-card-content">
-                    <div className="favorite-card-title">
-                      <div>
-                        <small>#{favorite.pokemonId}</small>
-                        <h3>{capitalize(favorite.name)}</h3>
-                      </div>
-                      <strong>{favorite.rating}</strong>
-                    </div>
-
-                    <span className="favorite-custom-tag">{favorite.tag}</span>
-                    <small className="favorite-appearance">
-                      {favorite.appearance.split('-').map(capitalize).join(' ')}{' '}
-                      appearance
-                    </small>
-                    {favorite.note && <p>{favorite.note}</p>}
-
-                    <div className="favorite-card-actions">
-                      <Link
-                        to={`/pokemon/${favorite.pokemonName || favorite.name}`}
-                        state={{ returnTo: '/favorites' }}
-                      >
-                        View details
-                      </Link>
-                      <button
-                        type="button"
-                        onClick={() => setEditingFavorite(favorite)}
-                      >
-                        Edit
-                      </button>
-                      <button
-                        type="button"
-                        className="remove-favorite"
-                        onClick={() => setFavoriteToRemove(favorite)}
-                      >
-                        Remove
-                      </button>
-                    </div>
-                  </div>
-                </article>
+                <FavoriteCard
+                  key={favorite.id}
+                  favorite={favorite}
+                  onEdit={setEditingFavorite}
+                  onRemove={setFavoriteToRemove}
+                />
               ))}
             </div>
           )}
 
           {visibleFavorites.length > 0 && (
-            <Pagination
-              page={currentPage}
-              totalPages={totalPages}
-              onChange={setPage}
-              label="Favorites pagination"
-            />
+            <Pagination page={currentPage} totalPages={totalPages} onChange={setPage} label="Favorites pagination" />
           )}
         </>
       )}
