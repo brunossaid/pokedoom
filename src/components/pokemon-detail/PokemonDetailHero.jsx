@@ -14,7 +14,6 @@ function PokemonDetailHero({
   fallbackImage,
   femaleImage,
   shinyImage,
-  shinyFemaleImage,
   hasBothGenders,
   isShiny,
   genus,

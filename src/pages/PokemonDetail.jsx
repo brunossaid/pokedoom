@@ -69,7 +69,7 @@ function PokemonDetail() {
   }
 
   const {
-    image, fallbackImage, femaleImage, shinyImage, shinyFemaleImage, isShiny,
+    image, fallbackImage, femaleImage, shinyImage, isShiny,
     selectedForm, favoriteName, favoriteId,
   } = getPokemonAppearance(pokemon, forms, selectedAppearance);
   const existingFavorite = favorites.find(
@@ -135,7 +135,7 @@ function PokemonDetail() {
       <PokemonDetailHero pokemon={pokemon} forms={forms} appearance={selectedAppearance}
         setAppearance={setSelectedAppearance} selectedForm={selectedForm} image={image}
         fallbackImage={fallbackImage}
-        femaleImage={femaleImage} shinyImage={shinyImage} shinyFemaleImage={shinyFemaleImage}
+        femaleImage={femaleImage} shinyImage={shinyImage}
         hasBothGenders={hasBothGenders}
         isShiny={isShiny} genus={genus} description={description} existingFavorite={existingFavorite}
         confirmation={favoriteConfirmation} error={favoriteError} showForm={showFavoriteForm}

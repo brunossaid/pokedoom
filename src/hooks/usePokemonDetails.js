@@ -7,6 +7,7 @@ import {
   getPokemonSpecies,
 } from '../api/pokeApi';
 import { useHistory } from './useHistory';
+import { getValidInitialAppearance } from '../utils/pokemonAppearance';
 
 export function usePokemonDetails(name, initialAppearance) {
   const { recordView } = useHistory();
@@ -51,8 +52,7 @@ export function usePokemonDetails(name, initialAppearance) {
           setDefenses([]);
           setDefensesLoading(true);
           setSelectedAppearance(
-            initialAppearance ||
-              (formData.length > 1 ? `form:${formData[0].name}` : 'default')
+            getValidInitialAppearance(data, formData, initialAppearance)
           );
           recordView(data);
         }

@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { getPokemonDetails } from '../api/pokeApi';
-import { capitalize, formatPokemonName } from '../utils/textUtils';
+import { formatPokemonName } from '../utils/textUtils';
 import { handleImageError } from '../utils/imageFallback';
 import { ErrorState, LoadingState } from './AsyncState';
 
