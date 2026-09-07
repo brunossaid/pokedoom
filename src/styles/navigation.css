@@ -1,9 +1,9 @@
 .pokeball-button {
-  width: 72px;
-  height: 72px;
+  width: 60px;
+  height: 60px;
 
   position: fixed;
-  bottom: 20px;
+  bottom: 12px;
   left: 50%;
   transform: translateX(-50%);
 
@@ -29,21 +29,32 @@
 }
 
 .pokeball-closed {
-  width: 64px;
+  width: 54px;
 }
 
 .pokeball-open {
-  width: 72px;
+  width: 60px;
 }
 
 .bottom-menu {
+  /* Keep the navigation palette dark in both app themes. */
+  --app-background: rgb(3, 3, 12);
+  --surface-background: rgb(19, 19, 36);
+  --text-color: #ffffff;
+  --border-color: #ffffff;
+  --hover-background: #ffffff;
+  --hover-color: #000000;
+
+  color-scheme: dark;
+  color: var(--text-color);
+
   position: fixed;
   left: 50%;
   bottom: 0;
 
   width: 100%;
   max-width: 1200px;
-  height: 270px;
+  height: 160px;
 
   transform: translate(-50%, 100%);
 
@@ -54,7 +65,7 @@
   justify-content: flex-start;
   align-items: center;
 
-  padding: 20px;
+  padding: 12px;
 
   transition: transform 0.3s ease;
 
@@ -63,8 +74,8 @@
 
 .bottom-menu .theme-toggle {
   position: absolute;
-  right: 20px;
-  bottom: 40px;
+  right: 12px;
+  bottom: 24px;
 }
 
 .bottom-menu.open {
@@ -75,9 +86,9 @@
   width: 100%;
 
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(4, minmax(0, 1fr));
 
-  gap: 12px;
+  gap: 8px;
 }
 
 .menu-grid a {
@@ -105,6 +116,16 @@
     transform 0.2s ease;
 }
 
+.menu-icon {
+  width: 52px;
+  height: 52px;
+  object-fit: contain;
+}
+
+.menu-label {
+  display: none;
+}
+
 .menu-grid a:hover {
   background-color: var(--hover-background);
   color: var(--hover-color);
@@ -117,3 +138,12 @@
   border-color: var(--app-background);
 }
 
+@media (max-width: 767px) {
+  .menu-grid a,
+  .menu-grid a:hover,
+  .menu-grid a.active {
+    border: none;
+    background-color: transparent;
+    box-shadow: none;
+  }
+}

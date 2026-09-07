@@ -1,10 +1,10 @@
 @media (min-width: 768px) {
-  .menu-grid {
-    grid-template-columns: repeat(4, 1fr);
+  .menu-icon {
+    display: none;
   }
 
-  .bottom-menu {
-    height: 200px;
+  .menu-label {
+    display: inline;
   }
 
   .pokemon-grid {
@@ -19,5 +19,65 @@
   .pokemon-image {
     width: 140px;
     height: 140px;
+  }
+}
+
+@media (orientation: landscape) and (max-height: 600px) and (pointer: coarse) {
+  .pokeball-button {
+    left: auto;
+    right: calc(14px + env(safe-area-inset-right, 0px));
+    bottom: calc(8px + env(safe-area-inset-bottom, 0px));
+    transform: none;
+  }
+
+  .pokeball-button:hover {
+    transform: translateY(-2px);
+  }
+
+  .bottom-menu {
+    left: auto;
+    right: 0;
+    width: calc(88px + env(safe-area-inset-right, 0px));
+    height: 100dvh;
+    padding: calc(8px + env(safe-area-inset-top, 0px))
+      calc(10px + env(safe-area-inset-right, 0px))
+      calc(76px + env(safe-area-inset-bottom, 0px)) 10px;
+    gap: 8px;
+    overflow-y: auto;
+    transform: translateX(100%);
+  }
+
+  .bottom-menu.open {
+    transform: translateX(0);
+  }
+
+  .bottom-menu .menu-grid {
+    flex: 1;
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: repeat(4, minmax(44px, 1fr));
+    gap: 4px;
+  }
+
+  .menu-grid a,
+  .menu-grid a:hover,
+  .menu-grid a.active {
+    min-height: 44px;
+    border: none;
+    background-color: transparent;
+    box-shadow: none;
+  }
+
+  .menu-icon {
+    display: block;
+    width: clamp(40px, 12dvh, 52px);
+    height: clamp(40px, 12dvh, 52px);
+  }
+
+  .menu-label {
+    display: none;
+  }
+
+  .bottom-menu .theme-toggle {
+    display: none;
   }
 }

@@ -34,19 +34,27 @@ function Menu() {
       >
         <div className="menu-grid">
           <NavLink to="/pokedex" onClick={() => setIsOpen(false)}>
-            Pokedex
+            <img className="menu-icon" src="/images/icons/pokedex.png" alt="" />
+            <span className="menu-label">Pokedex</span>
           </NavLink>
 
           <NavLink to="/favorites" onClick={() => setIsOpen(false)}>
-            Favorites
+            <img
+              className="menu-icon"
+              src="/images/icons/favorites.png"
+              alt=""
+            />
+            <span className="menu-label">Favorites</span>
           </NavLink>
 
           <NavLink to="/history" onClick={() => setIsOpen(false)}>
-            History
+            <img className="menu-icon" src="/images/icons/history.png" alt="" />
+            <span className="menu-label">History</span>
           </NavLink>
 
           <NavLink to="/contact" onClick={() => setIsOpen(false)}>
-            Contact
+            <img className="menu-icon" src="/images/icons/contact.png" alt="" />
+            <span className="menu-label">Contact</span>
           </NavLink>
         </div>
         <ThemeToggle />
