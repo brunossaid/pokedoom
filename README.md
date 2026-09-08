@@ -1,30 +1,62 @@
 # PokeDoom
 
-PokeDoom es una aplicación web mobile-first para explorar Pokémon mediante [PokéAPI](https://pokeapi.co/). Permite buscar y filtrar Pokémon, consultar información detallada, guardar favoritos personalizados y mantener un historial local de visitas.
+PokeDoom es una aplicación web **mobile-first** para explorar Pokémon utilizando [PokéAPI](https://pokeapi.co/). Permite buscar y filtrar Pokémon, consultar información detallada, guardar favoritos personalizados y mantener un historial local de visitas.
 
-Proyecto desarrollado para el Trabajo Integrador del Módulo 1 de Aplicaciones Móviles.
+Proyecto desarrollado para el Trabajo Integrador del Módulo 1 de **Aplicaciones Móviles**.
+
+## Enfoque del proyecto
+
+El proyecto fue desarrollado como una aplicación web responsive utilizando React, con un enfoque mobile-first y especial atención a la adaptación de la interfaz a diferentes tamaños y orientaciones de pantalla.
+
+La información de los Pokémon se obtiene dinámicamente desde PokéAPI mediante peticiones HTTP. Los datos propios del usuario, como favoritos, historial y preferencia de tema, se almacenan localmente mediante `localStorage`.
+
+La interfaz fue desarrollada con CSS propio, sin utilizar frameworks o librerías de componentes visuales, buscando mantener una estética inspirada en Pokémon y videojuegos retro.
 
 ## Funcionalidades
 
-- Pokédex paginada con 10 Pokémon por página.
+- Pokédex paginada y adaptada al tamaño de pantalla.
 - Búsqueda por nombre y filtros por tipo y región.
-- Contador de resultados y etiquetas de filtros aplicados.
-- Vista detallada con descripción, tipos, habilidades, estadísticas, géneros y variantes shiny.
-- Debilidades, resistencias, inmunidades y cadenas evolutivas.
-- Formas Mega, Primal y Gigantamax cuando están disponibles.
-- Favoritos con prioridad, etiqueta personalizada y nota personal.
-- Búsqueda, filtros y paginación de favoritos.
-- Historial automático limitado a los 100 Pokémon más recientes.
+- Vista detallada de cada Pokémon con tipos, habilidades, estadísticas y cadena evolutiva.
+- Visualización de debilidades, resistencias e inmunidades.
+- Soporte para formas Mega, Primal y Gigantamax cuando están disponibles.
+- Favoritos con rating, etiqueta personalizada y nota personal.
+- Historial automático de los Pokémon visitados.
 - Persistencia de favoritos, historial y tema mediante `localStorage`.
 - Tema claro y oscuro.
-- Página de contacto con validaciones y mapa de la Catedral de La Plata.
-- Navegación accesible, estados de carga y manejo de errores.
-- Diseño responsive con CSS propio y enfoque mobile-first.
+- Estados de carga y manejo de errores.
+- Diseño responsive con enfoque mobile-first.
 
-## Tecnologías
+## Capturas
+
+### Inicio
+
+![Inicio](docs/images/home.png)
+
+### Pokédex
+
+![Pokédex](docs/images/pokedex.png)
+
+### Detalle de Pokémon
+
+![Detalle de Pokémon](docs/images/pokemon-detail.png)
+
+### Favoritos
+
+![Favoritos](docs/images/favorites.png)
+
+### Historial
+
+![Historial](docs/images/history.png)
+
+### Contacto
+
+![Contacto](docs/images/contact.png)
+
+## Tecnologías utilizadas
 
 - React
 - JavaScript
+- Vite
 - CSS
 - Fetch API
 - PokéAPI
@@ -33,47 +65,22 @@ Proyecto desarrollado para el Trabajo Integrador del Módulo 1 de Aplicaciones M
 
 No se utilizan frameworks ni librerías de interfaz visual.
 
-## Instalación
+## Instalación y ejecución local
 
-Es necesario tener instalados Node.js y npm.
+Es necesario tener instalados **Node.js** y **npm**.
 
 ```bash
 git clone https://github.com/brunossaid/pokedoom.git
+
 cd pokedoom
+
 npm install
+
 npm run dev
 ```
-
-Vite mostrará en la terminal la dirección local para abrir la aplicación en el navegador.
-
-## Comandos disponibles
-
-```bash
-npm run dev      # Inicia el servidor de desarrollo
-npm run build    # Genera la versión de producción
-npm run preview  # Previsualiza la versión de producción
-npm run lint     # Revisa el código con ESLint
-```
-
-## Rutas
-
-| Ruta | Vista |
-| --- | --- |
-| `/` | Inicio |
-| `/pokedex` | Búsqueda y listado de Pokémon |
-| `/pokemon/:name` | Detalle de un Pokémon |
-| `/favorites` | Pokémon favoritos |
-| `/history` | Historial de visitas |
-| `/contact` | Contacto y ubicación |
-
-Las rutas inexistentes muestran una página 404 propia.
 
 ## Autores
 
 - Agustín Cabeda — [cabeda52@gmail.com](mailto:cabeda52@gmail.com)
+
 - Bruno Said — [ibrunosaid@gmail.com](mailto:ibrunosaid@gmail.com)
-
-## Fuentes de datos y mapas
-
-- Datos de Pokémon: [PokéAPI](https://pokeapi.co/)
-- Mapa: [OpenStreetMap](https://www.openstreetmap.org/)
