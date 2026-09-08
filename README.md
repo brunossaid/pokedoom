@@ -40,18 +40,6 @@ La interfaz fue desarrollada con CSS propio, sin utilizar frameworks o librería
 
 ![Detalle de Pokémon](docs/images/pokemon-detail.png)
 
-### Favoritos
-
-![Favoritos](docs/images/favorites.png)
-
-### Historial
-
-![Historial](docs/images/history.png)
-
-### Contacto
-
-![Contacto](docs/images/contact.png)
-
 ## Tecnologías utilizadas
 
 - React
